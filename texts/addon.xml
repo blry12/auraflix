@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<addon id="repository.auraflix" name="AURAFlix Repo" version="1.0" provider-name="BLRY">
+    <extension point="xbmc.addon.repository" name="AURAFlix Repository">
+        <info compressed="false">https://auraflixrepo.000webhostapp.com/auraflix/texts/addon.xml</info>
+        <datadir zip="true">https://auraflixrepo.000webhostapp.com/auraflix/repo/zips/</datadir>
+    </extension>
+    <extension point="xbmc.addon.metadata">
+        <summary></summary>
+        <description></description>
+        <platform>all</platform>
+    </extension>
+</addon>
+

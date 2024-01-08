@@ -1,0 +1,21 @@
+<builds>  
+
+  <build>
+	<name>[COLOR red]AURAFlix Build FEN based[/COLOR]</name>
+	<version>1.0.0</version>
+	<url>https://archive.org/download/auraflix-1.0/AURAFlix_1.0.zip</url>
+	<icon>https://auraflixrepo.000webhostapp.com/auraflix/icon.png</icon>
+	<fanart>https://auraflixrepo.000webhostapp.com/auraflix/fanart.jpg</fanart>
+	<description>AURAFlix Initial Release !!!MUST USE TRAKT and Debrid Servicee</description>
+  </build>
+  
+  <build>
+	<name>[COLOR red]AURAFlix Build Seren based[/COLOR]</name>
+	<version>1.0.0</version>
+	<url>https://archive.org/download/auraflix.-new/AURAFlix.NEW.zip</url>
+	<icon>https://auraflixrepo.000webhostapp.com/auraflix/icon.png</icon>
+	<fanart>https://auraflixrepo.000webhostapp.com/auraflix/fanart.jpg</fanart>
+	<description>AURAFlix Initial Release !!!MUST USE TRAKT and Debrid Service</description>
+  </build>
+ 
+</builds>
