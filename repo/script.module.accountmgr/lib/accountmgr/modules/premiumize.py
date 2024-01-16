@@ -73,7 +73,7 @@ class Premiumize:
 				return False, False
 			return True, False
 		self.token = token['access_token']
-		self.headers = {'User-Agent': 'My Accounts for Kodi', 'Authorization': 'Bearer %s' % self.token}
+		self.headers = {'User-Agent': 'Account Manager for Kodi', 'Authorization': 'Bearer %s' % self.token}
 		control.sleep(500)
 		account_info = self.account_info()
 		control.setSetting('premiumize.token', token['access_token'])

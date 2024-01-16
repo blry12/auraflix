@@ -1,32 +1,41 @@
 import xbmc
 import xbmcaddon
 import xbmcgui
-
+import os.path
+import xbmcvfs
 import os
 import time
+import sqlite3
 
+from sqlite3 import Error
 from xml.etree import ElementTree
-
 from resources.libs.common.config import CONFIG
 from resources.libs.common import logging
 from resources.libs.common import tools
+from resources.libs.common import var
 
 ORDER = ['fen',
+         'fenlt',
+         'affen',
          'ezra',
          'coal',
          'pov',
          'umb',
+         'dradis',
+         'taz',
          'thecrew',
          'homelander',
          'quicksilver',
          'genocide',
          'shazam',
          'nightwing',
+         'thelab',
          'alvin',
          'moria',
          'absolution',
          'nine',
          'acctmgr',
+         'allact',
          'myact']
 
 DEBRIDID = {
@@ -45,6 +54,36 @@ DEBRIDID = {
         'default_file'  : '',
         'data'     : ['furk_login', 'furk_password', 'furk_api_key', 'provider.furk', 'provider.easynews', 'easynews_user', 'easynews_password', 'furk.title_filter', 'check.furk', 'fu.priority', 'easynews.use_custom_farm', 'easynews.server_name', 'easynews.title_filter', 'easynews.filter_lang', 'en.priority', 'easynews.lang_filters', 'check.easynews'],
         'activate' : 'Addon.OpenSettings(plugin.video.fen)'},
+    'fenlt': {
+        'name'     : 'Fen Light',
+        'plugin'   : 'plugin.video.fenlight',
+        'saved'    : 'fenlt',
+        'path'     : os.path.join(CONFIG.ADDONS, 'plugin.video.fenlight'),
+        'icon'     : os.path.join(CONFIG.ADDONS, 'plugin.video.fenlight/resources/media/', 'fenlight_icon.png'),
+        'fanart'   : os.path.join(CONFIG.ADDONS, 'plugin.video.fenlight/resources/media/', 'fenlight_fanart.png'),
+        'file'     : os.path.join(CONFIG.DEBRIDFOLD_RD, 'fenlt'),
+        'settings' : os.path.join(CONFIG.ADDON_DATA, 'plugin.video.fenlight/databases', 'settings.db'),
+        'default'    : '',
+        'default_furk'  : '',
+        'default_easy'  : '',
+        'default_file'  : '',
+        'data'     : [],
+        'activate' : 'Addon.OpenSettings(plugin.video.fenlight)'},
+    'affen': {
+        'name'     : 'afFENity',
+        'plugin'   : 'plugin.video.affenity',
+        'saved'    : 'affen',
+        'path'     : os.path.join(CONFIG.ADDONS, 'plugin.video.affenity'),
+        'icon'     : os.path.join(CONFIG.ADDONS, 'plugin.video.affenity/resources/media/', 'affenity_icon.png'),
+        'fanart'   : os.path.join(CONFIG.ADDONS, 'plugin.video.affenity/resources/media/', 'affenity_fanart.png'),
+        'file'     : os.path.join(CONFIG.DEBRIDFOLD_RD, 'affen'),
+        'settings' : os.path.join(CONFIG.ADDON_DATA, 'plugin.video.affenity/databases', 'settings.db'),
+        'default'    : '',
+        'default_furk'  : '',
+        'default_easy'  : '',
+        'default_file'  : '',
+        'data'     : [],
+        'activate' : 'Addon.OpenSettings(plugin.video.affenity)'},
     'ezra': {
         'name'     : 'Ezra',
         'plugin'   : 'plugin.video.ezra',
@@ -61,7 +100,7 @@ DEBRIDID = {
         'data'     : ['furk_login', 'furk_password', 'furk_api_key', 'provider.furk', 'provider.easynews', 'easynews_user',  'easynews_password', 'furk.mod.level', 'furk.title_filter', 'check.furk', 'fu.priority', 'easynews.title_filter', 'easynews.filter_lang', 'en.priority', 'easynews.lang_filters', 'easynews_moderation', 'check.easynews'],
         'activate' : 'Addon.OpenSettings(plugin.video.ezra)'},
     'coal': {
-        'name'     : 'Coalition',
+        'name'     : 'The Coalition',
         'plugin'   : 'plugin.video.coalition',
         'saved'    : 'coal',
         'path'     : os.path.join(CONFIG.ADDONS, 'plugin.video.coalition'),
@@ -105,6 +144,36 @@ DEBRIDID = {
         'default_file'  : 'filepursuit.api',
         'data'     : ['easynews.enable', 'easynews.user', 'easynews.password', 'filepursuit.enable', 'filepursuit.api', 'furk.enable', 'furk.user_name', 'furk.user_pass', 'furk.api', 'easynews.priority', 'filepursuit.priority', 'furk.priority'],
         'activate' : 'Addon.OpenSettings(plugin.video.umbrella)'},
+    'dradis': {
+        'name'     : 'Dradis',
+        'plugin'   : 'plugin.video.dradis',
+        'saved'    : 'dradis',
+        'path'     : os.path.join(CONFIG.ADDONS, 'plugin.video.dradis'),
+        'icon'     : os.path.join(CONFIG.ADDONS, 'plugin.video.dradis', 'icon.png'),
+        'fanart'   : os.path.join(CONFIG.ADDONS, 'plugin.video.dradis', 'fanart.jpg'),
+        'file'     : os.path.join(CONFIG.NONDEBRIDFOLD, 'dradis_nondebrid'),
+        'settings' : os.path.join(CONFIG.ADDON_DATA, 'plugin.video.dradis', 'settings.xml'),
+        'default'  : '',
+        'default_furk'  : 'furk.username',
+        'default_easy'  : 'easynews.username',
+        'default_file'  : 'filepursuit.api',
+        'data'     : ['easynews.username', 'easynews.password', 'filepursuit.api', 'furk.username', 'furk.password', 'furk.api', 'easynews.priority', 'filepursuit.priority', 'furk.priority'],
+        'activate' : 'Addon.OpenSettings(plugin.video.dradis)'},
+    'taz': {
+        'name'     : 'Taz19',
+        'plugin'   : 'plugin.video.taz19',
+        'saved'    : 'taz',
+        'path'     : os.path.join(CONFIG.ADDONS, 'plugin.video.taz19'),
+        'icon'     : os.path.join(CONFIG.ADDONS, 'plugin.video.taz19', 'icon.png'),
+        'fanart'   : os.path.join(CONFIG.ADDONS, 'plugin.video.taz19', 'fanart.jpg'),
+        'file'     : os.path.join(CONFIG.NONDEBRIDFOLD, 'taz_nondebrid'),
+        'settings' : os.path.join(CONFIG.ADDON_DATA, 'plugin.video.taz19', 'settings.xml'),
+        'default'  : '',
+        'default_furk'  : 'furk.login',
+        'default_easy'  : 'easynews_user',
+        'default_file'  : '',
+        'data'     : ['easynews_user', 'easynews_password', 'furk.login', 'furk_password', 'furk_api_key', 'en.priority', 'fu.priority'],
+        'activate' : 'Addon.OpenSettings(plugin.video.taz19)'},
    'thecrew': {
         'name'     : 'The Crew',
         'plugin'   : 'plugin.video.thecrew',
@@ -195,6 +264,21 @@ DEBRIDID = {
         'default_file'  : '',
         'data'     : ['furk.user_name', 'furk.user_pass', 'furk.api', 'furk.limit'],
         'activate' : 'Addon.OpenSettings(plugin.video.nightwing)'},
+   'thelab': {
+        'name'     : 'TheLab',
+        'plugin'   : 'plugin.video.thelab',
+        'saved'    : 'thelab',
+        'path'     : os.path.join(CONFIG.ADDONS, 'plugin.video.thelab'),
+        'icon'     : os.path.join(CONFIG.ADDONS, 'plugin.video.thelab', 'icon.png'),
+        'fanart'   : os.path.join(CONFIG.ADDONS, 'plugin.video.thelab', 'fanart.jpg'),
+        'file'     : os.path.join(CONFIG.NONDEBRIDFOLD, 'thelab_nondebrid'),
+        'settings' : os.path.join(CONFIG.ADDON_DATA, 'plugin.video.thelab', 'settings.xml'),
+        'default'  : '',
+        'default_furk'  : 'furk.user_name',
+        'default_easy'  : '',
+        'default_file'  : '',
+        'data'     : ['furk.user_name', 'furk.user_pass', 'furk.api', 'furk.limit'],
+        'activate' : 'Addon.OpenSettings(plugin.video.thelab)'},
    'alvin': {
         'name'     : 'Alvin',
         'plugin'   : 'plugin.video.alvin',
@@ -270,6 +354,21 @@ DEBRIDID = {
         'default_file'  : 'filepursuit.api.key',
         'data'     : ['furk.username', 'furk.password', 'furk.api.key', 'easynews.username', 'easynews.password', 'filepursuit.api.key'],
         'activate' : 'Addon.OpenSettings(script.module.accountmgr)'},
+    'allact': {
+        'name'     : 'All Accounts',
+        'plugin'   : 'script.module.allaccounts',
+        'saved'    : 'allact',
+        'path'     : os.path.join(CONFIG.ADDONS, 'script.module.allaccounts'),
+        'icon'     : os.path.join(CONFIG.ADDONS, 'script.module.allaccounts', 'icon.png'),
+        'fanart'   : os.path.join(CONFIG.ADDONS, 'script.module.allaccounts', 'fanart.png'),
+        'file'     : os.path.join(CONFIG.NONDEBRIDFOLD, 'allact_nondebrid'),
+        'settings' : os.path.join(CONFIG.ADDON_DATA, 'script.module.allaccounts', 'settings.xml'),
+        'default'  : '',
+        'default_furk'  : 'furk.username',
+        'default_easy'  : 'easynews.username',
+        'default_file'  : 'filepursuit.api.key',
+        'data'     : ['furk.username', 'furk.password', 'furk.api.key', 'easynews.username', 'easynews.password', 'filepursuit.api.key'],
+        'activate' : 'Addon.OpenSettings(script.module.allaccounts)'},
     'myact': {
         'name'     : 'My Accounts',
         'plugin'   : 'script.module.myaccounts',
@@ -286,11 +385,30 @@ DEBRIDID = {
         'data'     : ['furk.username', 'furk.password', 'furk.api.key', 'easynews.username', 'easynews.password', 'filepursuit.api.key'],
         'activate' : 'Addon.OpenSettings(script.module.myaccounts)'}
 }
+
+def create_conn(db_file):
+    try:
+        conn = None
+        try:
+            conn = sqlite3.connect(db_file)
+        except Error as e:
+            print(e)
+
+        return conn
+    except:
+        xbmc.log('%s: None_debrid_all.py Failed!' % var.amgr, xbmc.LOGINFO)
+        pass
     
 def debrid_user_furk(who):
     user_furk = None
     if DEBRIDID[who]:
         if os.path.exists(DEBRIDID[who]['path']):
+            name = DEBRIDID[who]['name']
+            if name == 'Fen Light':
+                user_furk = ''
+            if name == 'afFENity':
+                user_furk = ''
+        else:
             try:
                 add = tools.get_addon_by_id(DEBRIDID[who]['plugin'])
                 user_furk = add.getSetting(DEBRIDID[who]['default_furk'])
@@ -301,18 +419,61 @@ def debrid_user_furk(who):
 def debrid_user_easy(who):
     user_easy = None
     if DEBRIDID[who]:
-        if os.path.exists(DEBRIDID[who]['path']):
+        name = DEBRIDID[who]['name']
+        if os.path.exists(DEBRIDID[who]['path']) and name == 'Fen Light':
             try:
-                add = tools.get_addon_by_id(DEBRIDID[who]['plugin'])
-                user_easy = add.getSetting(DEBRIDID[who]['default_easy'])
+                # Create database connection
+                conn = create_conn(var.fenlt_settings_db)
+                with conn:
+                    cur = conn.cursor()
+                    cur.execute('''SELECT setting_value FROM settings WHERE setting_id = ?''', ('easynews_user',)) #Get setting to compare
+                    auth = cur.fetchone()
+                    user_data = str(auth)
+
+                    if user_data == "('empty_setting',)" or user_data == "('',)" or user_data == '' or user_data == None: #Check if addon is authorized
+                        user_easy = None #Return if not authorized
+                    else:
+                        user_easy = user_data #Return if authorized
+                    cur.close()
             except:
+                xbmc.log('%s: NonDebridit Fen Light Failed!' % var.amgr, xbmc.LOGINFO)
                 pass
+        elif os.path.exists(DEBRIDID[who]['path']) and name == 'afFENity':
+            try:
+                conn = create_conn(var.affen_settings_db)
+                with conn:
+                    cur = conn.cursor()
+                    cur.execute('''SELECT setting_value FROM settings WHERE setting_id = ?''', ('easynews_user',))
+                    auth = cur.fetchone()
+                    user_data = str(auth)
+
+                    if user_data == "('empty_setting',)" or user_data == "('',)" or user_data == '' or user_data == None:
+                        user_easy = None
+                    else:
+                        user_easy = user_data
+                    cur.close()
+            except:
+                xbmc.log('%s: NonDebridit afFENity Failed!' % var.amgr, xbmc.LOGINFO)
+                pass
+        else:
+            if os.path.exists(DEBRIDID[who]['path']):
+                try:
+                    add = tools.get_addon_by_id(DEBRIDID[who]['plugin'])
+                    user_easy = add.getSetting(DEBRIDID[who]['default_easy'])
+                except:
+                    pass
     return user_easy
 
 def debrid_user_file(who):
     user_file = None
     if DEBRIDID[who]:
         if os.path.exists(DEBRIDID[who]['path']):
+            name = DEBRIDID[who]['name']
+            if name == 'Fen Light':
+                user_file = ''
+            if name == 'afFENity':
+                user_file = ''
+        else:
             try:
                 add = tools.get_addon_by_id(DEBRIDID[who]['plugin'])
                 user_file = add.getSetting(DEBRIDID[who]['default_file'])
@@ -414,23 +575,24 @@ def update_debrid(do, who):
             logging.log('Debrid Info Not Found for {0}'.format(name))
     elif do == 'clearaddon':
         logging.log('{0} SETTINGS: {1}'.format(name, settings))
-        if os.path.exists(settings):
-            try:
-                tree = ElementTree.parse(settings)
-                root = tree.getroot()
-                
-                for setting in root.findall('setting'):
-                    if setting.attrib['id'] in data:
-                        logging.log('Removing Setting: {0}'.format(setting.attrib))
-                        root.remove(setting)
-                            
-                tree.write(settings)
-                
-            except Exception as e:
-                logging.log("[Debrid Info] Unable to Clear Addon {0} ({1})".format(who, str(e)), level=xbmc.LOGERROR)
-    xbmc.executebuiltin('Container.Refresh()')
-    
-    revoke_nondebrid() #Restore default API keys for all add-ons
+        if name == 'Fen Light':
+            pass
+        else:
+            if os.path.exists(settings):
+                try:
+                    tree = ElementTree.parse(settings)
+                    root = tree.getroot()
+                    
+                    for setting in root.findall('setting'):
+                        if setting.attrib['id'] in data:
+                            logging.log('Removing Setting: {0}'.format(setting.attrib))
+                            root.remove(setting)
+                                
+                    tree.write(settings)
+                    
+                except Exception as e:
+                    logging.log("[Debrid Info] Unable to Clear Addon {0} ({1})".format(who, str(e)), level=xbmc.LOGERROR)
+        xbmc.executebuiltin('Container.Refresh()')
 
 def auto_update(who):
     if who == 'all':
@@ -490,58 +652,3 @@ def import_list(who):
 def open_settings_debrid(who):
     addonid = tools.get_addon_by_id(DEBRIDID[who]['plugin'])
     addonid.openSettings()
-
-def revoke_nondebrid():
-
-    if xbmcvfs.exists(var.chk_ezra) and xbmcvfs.exists(var.chkset_ezra):
-        try:
-            addon = xbmcaddon.Addon("plugin.video.ezra")
-            addon.setSetting("fanart_client_key", var.ezra_fan)                        
-            addon = xbmcaddon.Addon("plugin.video.ezra")
-            addon.setSetting("tmdb_api", var.ezra_tmdb)
-        except:
-            pass
-        
-    if xbmcvfs.exists(var.chk_fen) and xbmcvfs.exists(var.chkset_fen):
-        try:
-            addon = xbmcaddon.Addon("plugin.video.fen")
-            addon.setSetting("fanart_client_key", var.fen_fan)                        
-            addon = xbmcaddon.Addon("plugin.video.fen")
-            addon.setSetting("tmdb_api", var.fen_tmdb)
-        except:
-            pass
-
-    if xbmcvfs.exists(var.chk_pov) and xbmcvfs.exists(var.chkset_pov):
-
-        addon = xbmcaddon.Addon("plugin.video.pov")
-        addon.setSetting("fanart_client_key", var.pov_fan)                        
-        addon = xbmcaddon.Addon("plugin.video.pov")
-        addon.setSetting("tmdb_api", var.pov_tmdb)
-
-        
-    if xbmcvfs.exists(var.chk_adina) and xbmcvfs.exists(var.chkset_adina):
-        try:
-            addon = xbmcaddon.Addon("plugin.video.adina")
-            addon.setSetting("fanart_client_key", var.adina_fan)                        
-            addon = xbmcaddon.Addon("plugin.video.adina")
-            addon.setSetting("tmdb_api", var.adina_tmdb)
-        except:
-            pass
-
-    if xbmcvfs.exists(var.chk_home) and xbmcvfs.exists(var.chkset_home):
-        try:
-            addon = xbmcaddon.Addon("plugin.video.home")
-            addon.setSetting("fanart.tv.user", var.home_fan)                        
-            addon = xbmcaddon.Addon("plugin.video.home")
-            addon.setSetting("tm.user", var.home_tmdb)
-        except:
-            pass
-
-    if xbmcvfs.exists(var.chk_crew) and xbmcvfs.exists(var.chkset_crew):
-        try:
-            addon = xbmcaddon.Addon("plugin.video.thecrew")
-            addon.setSetting("fanart.tv.user", var.crew_fan)                        
-            addon = xbmcaddon.Addon("plugin.video.thecrew")
-            addon.setSetting("tm.user", var.crew_tmdb)
-        except:
-            pass

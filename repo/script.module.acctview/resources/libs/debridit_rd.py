@@ -3,24 +3,31 @@ import xbmcaddon
 import xbmcgui
 import os.path
 import xbmcvfs
+import json
 import os
 import time
+import sqlite3
 
+from sqlite3 import Error
 from xml.etree import ElementTree
-
 from resources.libs.common.config import CONFIG
 from resources.libs.common import logging
 from resources.libs.common import tools
+from resources.libs.common import var
 
 ORDER = ['serenrd',
          'fenrd',
+         'fenltrd',
+         'affenrd',
          'ezrard',
          'coalrd',
          'povrd',
          'umbrd',
+         'dradisrd',
+         'tazrd',
          'shadowrd',
          'ghostrd',
-         'base19rd',
+         'baserd',
          'unleashedrd',
          'chainsrd',
          'twistedrd',
@@ -30,7 +37,10 @@ ORDER = ['serenrd',
          'blacklrd',
          'metvrd',
          'aliunderd',
+         'otakurd',
+         'realxrd',
          'acctmgrrd',
+         'allactrd',
          'myactrd',
          'rurlrd']
 
@@ -59,6 +69,30 @@ DEBRIDID = {
         'default'  : 'rd.account_id',
         'data'     : ['rd.client_id', 'rd.refresh', 'rd.secret', 'rd.token', 'rd.account_id', 'rd.enabled'],
         'activate' : 'Addon.OpenSettings(plugin.video.fen)'},
+    'fenltrd': {
+        'name'     : 'Fen Light',
+        'plugin'   : 'plugin.video.fenlight',
+        'saved'    : 'fenltrd',
+        'path'     : os.path.join(CONFIG.ADDONS, 'plugin.video.fenlight'),
+        'icon'     : os.path.join(CONFIG.ADDONS, 'plugin.video.fenlight/resources/media/', 'fenlight_icon.png'),
+        'fanart'   : os.path.join(CONFIG.ADDONS, 'plugin.video.fenlight/resources/media/', 'fenlight_fanart.png'),
+        'file'     : os.path.join(CONFIG.DEBRIDFOLD_RD, 'fenlt_rd'),
+        'settings' : os.path.join(CONFIG.ADDON_DATA, 'plugin.video.fenlight/databases', 'settings.db'),
+        'default'  : '',
+        'data'     : [],
+        'activate' : 'Addon.OpenSettings(plugin.video.fenlight)'},
+    'affenrd': {
+        'name'     : 'afFENity',
+        'plugin'   : 'plugin.video.affenity',
+        'saved'    : 'affenrd',
+        'path'     : os.path.join(CONFIG.ADDONS, 'plugin.video.affenity'),
+        'icon'     : os.path.join(CONFIG.ADDONS, 'plugin.video.affenity/resources/media/', 'affenity_icon.png'),
+        'fanart'   : os.path.join(CONFIG.ADDONS, 'plugin.video.affenity/resources/media/', 'affenity_fanart.png'),
+        'file'     : os.path.join(CONFIG.DEBRIDFOLD_RD, 'affen_rd'),
+        'settings' : os.path.join(CONFIG.ADDON_DATA, 'plugin.video.affenity/databases', 'settings.db'),
+        'default'  : '',
+        'data'     : [],
+        'activate' : 'Addon.OpenSettings(plugin.video.affenity)'},
     'ezrard': {
         'name'     : 'Ezra',
         'plugin'   : 'plugin.video.ezra',
@@ -72,7 +106,7 @@ DEBRIDID = {
         'data'     : ['rd.username', 'rd.token', 'rd.client_id', 'rd.refresh', 'rd.secret','rd.enabled'],
         'activate' : 'Addon.OpenSettings(plugin.video.ezra)'},
     'coalrd': {
-        'name'     : 'Coalition',
+        'name'     : 'The Coalition',
         'plugin'   : 'plugin.video.coalition',
         'saved'    : 'coalrd',
         'path'     : os.path.join(CONFIG.ADDONS, 'plugin.video.coalition'),
@@ -107,6 +141,30 @@ DEBRIDID = {
         'default'  : 'realdebridusername',
         'data'     : ['realdebridusername', 'realdebridtoken', 'realdebrid.clientid', 'realdebridsecret', 'realdebridrefresh', 'realdebrid.enable'],
         'activate' : 'Addon.OpenSettings(plugin.video.umbrella)'},
+    'dradisrd': {
+        'name'     : 'Dradis',
+        'plugin'   : 'plugin.video.dradis',
+        'saved'    : 'dradisrd',
+        'path'     : os.path.join(CONFIG.ADDONS, 'plugin.video.dradis'),
+        'icon'     : os.path.join(CONFIG.ADDONS, 'plugin.video.dradis', 'icon.png'),
+        'fanart'   : os.path.join(CONFIG.ADDONS, 'plugin.video.dradis', 'fanart.jpg'),
+        'file'     : os.path.join(CONFIG.DEBRIDFOLD_RD, 'dradis_rd'),
+        'settings' : os.path.join(CONFIG.ADDON_DATA, 'plugin.video.dradis', 'settings.xml'),
+        'default'  : 'realdebrid.username',
+        'data'     : ['realdebrid.username', 'realdebrid.token', 'realdebrid.client_id', 'realdebrid.secret', 'realdebrid.refresh', 'realdebrid.enable'],
+        'activate' : 'Addon.OpenSettings(plugin.video.dradis)'},
+    'tazrd': {
+        'name'     : 'Taz19',
+        'plugin'   : 'plugin.video.taz19',
+        'saved'    : 'tazrd',
+        'path'     : os.path.join(CONFIG.ADDONS, 'plugin.video.taz19'),
+        'icon'     : os.path.join(CONFIG.ADDONS, 'plugin.video.taz19', 'icon.png'),
+        'fanart'   : os.path.join(CONFIG.ADDONS, 'plugin.video.taz19', 'fanart.jpg'),
+        'file'     : os.path.join(CONFIG.DEBRIDFOLD_RD, 'taz_rd'),
+        'settings' : os.path.join(CONFIG.ADDON_DATA, 'plugin.video.taz19', 'settings.xml'),
+        'default'  : 'rd.client_id',
+        'data'     : ['rd.auth', 'rd.client_id', 'rd.refresh', 'rd.secret', 'rd.token', 'rd.username', 'rd.enabled', 'rd.priority'],
+        'activate' : 'Addon.OpenSettings(plugin.video.taz19)'},
     'shadowrd': {
         'name'     : 'Shadow',
         'plugin'   : 'plugin.video.shadow',
@@ -131,18 +189,18 @@ DEBRIDID = {
         'default'  : 'rd.client_id',
         'data'     : ['rd.expiry', 'rd.auth', 'rd.client_id', 'rd.refresh', 'rd.secret', 'debrid_select'],
         'activate' : 'Addon.OpenSettings(plugin.video.ghost)'},
-    'base19rd': {
-        'name'     : 'Base 19',
-        'plugin'   : 'plugin.video.base19',
-        'saved'    : 'base19rd',
-        'path'     : os.path.join(CONFIG.ADDONS, 'plugin.video.base19'),
-        'icon'     : os.path.join(CONFIG.ADDONS, 'plugin.video.base19', 'icon.png'),
-        'fanart'   : os.path.join(CONFIG.ADDONS, 'plugin.video.base19', 'fanart.jpg'),
-        'file'     : os.path.join(CONFIG.DEBRIDFOLD_RD, 'base19_rd'),
-        'settings' : os.path.join(CONFIG.ADDON_DATA, 'plugin.video.base19', 'settings.xml'),
+    'baserd': {
+        'name'     : 'Base',
+        'plugin'   : 'plugin.video.base',
+        'saved'    : 'baserd',
+        'path'     : os.path.join(CONFIG.ADDONS, 'plugin.video.base'),
+        'icon'     : os.path.join(CONFIG.ADDONS, 'plugin.video.base', 'icon.png'),
+        'fanart'   : os.path.join(CONFIG.ADDONS, 'plugin.video.base', 'fanart.jpg'),
+        'file'     : os.path.join(CONFIG.DEBRIDFOLD_RD, 'base_rd'),
+        'settings' : os.path.join(CONFIG.ADDON_DATA, 'plugin.video.base', 'settings.xml'),
         'default'  : 'rd.client_id',
         'data'     : ['rd.expiry', 'rd.auth', 'rd.client_id', 'rd.refresh', 'rd.secret', 'debrid_select'],
-        'activate' : 'Addon.OpenSettings(plugin.video.base19)'},
+        'activate' : 'Addon.OpenSettings(plugin.video.base)'},
     'unleashedrd': {
         'name'     : 'Unleashed',
         'plugin'   : 'plugin.video.unleashed',
@@ -251,6 +309,30 @@ DEBRIDID = {
         'default'  : 'rd.client_id',
         'data'     : ['rd.expiry', 'rd.auth', 'rd.client_id', 'rd.refresh', 'rd.secret', 'debrid_select'],
         'activate' : 'Addon.OpenSettings(plugin.video.aliunde)'},
+    'otakurd': {
+        'name'     : 'Otaku',
+        'plugin'   : 'plugin.video.otaku',
+        'saved'    : 'otakurd',
+        'path'     : os.path.join(CONFIG.ADDONS, 'plugin.video.otaku'),
+        'icon'     : os.path.join(CONFIG.ADDONS, 'plugin.video.otaku', 'icon.png'),
+        'fanart'   : os.path.join(CONFIG.ADDONS, 'plugin.video.otaku', 'fanart.jpg'),
+        'file'     : os.path.join(CONFIG.DEBRIDFOLD_RD, 'otaku_rd'),
+        'settings' : os.path.join(CONFIG.ADDON_DATA, 'plugin.video.otaku', 'settings.xml'),
+        'default'  : 'rd.username',
+        'data'     : ['rd.username', 'rd.auth', 'rd.client_id', 'rd.secret', 'rd.expiry', 'rd.refresh', 'realdebrid.enabled'],
+        'activate' : 'Addon.OpenSettings(plugin.video.otaku)'},
+    'realxrd': {
+        'name'     : 'Realizer',
+        'plugin'   : 'plugin.video.realizerx',
+        'saved'    : 'realxrd',
+        'path'     : os.path.join(CONFIG.ADDONS, 'plugin.video.realizerx'),
+        'icon'     : os.path.join(CONFIG.ADDONS, 'plugin.video.realizerx', 'icon.png'),
+        'fanart'   : os.path.join(CONFIG.ADDONS, 'plugin.video.realizerx', 'fanart.png'),
+        'file'     : os.path.join(CONFIG.DEBRIDFOLD_RD, 'realx_rd'),
+        'settings' : os.path.join(CONFIG.ADDON_DATA, 'plugin.video.realizerx', 'rdauth.json'),
+        'default'  : '',
+        'data'     : [],
+        'activate' : 'Addon.OpenSettings(plugin.video.realizerx)'},
     'acctmgrrd': {
         'name'     : 'Account Manager',
         'plugin'   : 'script.module.accountmgr',
@@ -263,6 +345,18 @@ DEBRIDID = {
         'default'  : 'realdebrid.username',
         'data'     : ['realdebrid.client_id', 'realdebrid.refresh', 'realdebrid.secret', 'realdebrid.token', 'realdebrid.username'],
         'activate' : 'Addon.OpenSettings(script.module.accountmgr)'},
+    'allactrd': {
+        'name'     : 'All Accounts',
+        'plugin'   : 'script.module.allaccounts',
+        'saved'    : 'allactrd',
+        'path'     : os.path.join(CONFIG.ADDONS, 'script.module.allaccounts'),
+        'icon'     : os.path.join(CONFIG.ADDONS, 'script.module.allaccounts', 'icon.png'),
+        'fanart'   : os.path.join(CONFIG.ADDONS, 'script.module.allaccounts', 'fanart.png'),
+        'file'     : os.path.join(CONFIG.DEBRIDFOLD_RD, 'allact_rd'),
+        'settings' : os.path.join(CONFIG.ADDON_DATA, 'script.module.allaccounts', 'settings.xml'),
+        'default'  : 'realdebrid.username',
+        'data'     : ['realdebrid.client_id', 'realdebrid.refresh', 'realdebrid.secret', 'realdebrid.token', 'realdebrid.username'],
+        'activate' : 'Addon.OpenSettings(script.module.allaccounts)'},
     'myactrd': {
         'name'     : 'My Accounts',
         'plugin'   : 'script.module.myaccounts',
@@ -289,18 +383,78 @@ DEBRIDID = {
         'activate' : 'Addon.OpenSettings(script.module.resolveurl)'}
 }
 
+def create_conn(db_file):
+    try:
+        conn = None
+        try:
+            conn = sqlite3.connect(db_file)
+        except Error as e:
+            print(e)
 
+        return conn
+    except:
+        xbmc.log('%s: Debridit_rd Failed!' % var.amgr, xbmc.LOGINFO)
+        pass
+    
 def debrid_user(who):
     user = None
     if DEBRIDID[who]:
-        if os.path.exists(DEBRIDID[who]['path']):
+        name = DEBRIDID[who]['name']
+        if os.path.exists(DEBRIDID[who]['path']) and name == 'Fen Light':
             try:
-                add = tools.get_addon_by_id(DEBRIDID[who]['plugin'])
-                user = add.getSetting(DEBRIDID[who]['default'])
-            except:
-                pass
-    return user
+                # Create database connection
+                conn = create_conn(var.fenlt_settings_db)
+                with conn:
+                    cur = conn.cursor()
+                    cur.execute('''SELECT setting_value FROM settings WHERE setting_id = ?''', ('rd.token',)) #Get setting to compare
+                    auth = cur.fetchone()
+                    user_data = str(auth)
 
+                    if user_data == "('empty_setting',)" or user_data == "('',)" or user_data == '' or user_data == None: #Check if addon is authorized
+                        user = None #Return if not authorized
+                    else:
+                        user = user_data #Return if authorized
+                    cur.close()
+            except:
+                xbmc.log('%s: Debridit_rd Fen Light Failed!' % var.amgr, xbmc.LOGINFO)
+                pass
+        elif os.path.exists(DEBRIDID[who]['path']) and name == 'afFENity':
+            try:
+                conn = create_conn(var.affen_settings_db)
+                with conn:
+                    cur = conn.cursor()
+                    cur.execute('''SELECT setting_value FROM settings WHERE setting_id = ?''', ('rd.token',))
+                    auth = cur.fetchone()
+                    user_data = str(auth)
+
+                    if user_data == "('empty_setting',)" or user_data == "('',)" or user_data == '' or user_data == None:
+                        user = None
+                    else:
+                        user = user_data
+                    cur.close()
+            except:
+                xbmc.log('%s: Debridit_rd afFENity Failed!' % var.amgr, xbmc.LOGINFO)
+                pass
+        elif os.path.exists(DEBRIDID[who]['path']) and name == 'Realizer':
+            try:
+                with open(var.chkset_realx_json) as r:
+                    data = json.load(r)
+                    chk_auth_realx = data['token']
+                    if not str(var.chk_accountmgr_tk_rd) == str(chk_auth_realx) or str(chk_auth_realx) == '':
+                        user = None
+                    else:
+                        user = str(chk_auth_realx)
+            except:
+                xbmc.log('%s: Debridit_rd Realizer Failed!' % var.amgr, xbmc.LOGINFO)
+                pass
+        else:
+            if os.path.exists(DEBRIDID[who]['path']):
+                try:
+                    add = tools.get_addon_by_id(DEBRIDID[who]['plugin'])
+                    user = add.getSetting(DEBRIDID[who]['default'])
+                except:
+                    pass
+    return user
 
 def debrid_it(do, who):
     if not os.path.exists(CONFIG.ADDON_DATA):

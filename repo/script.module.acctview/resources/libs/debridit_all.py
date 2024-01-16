@@ -1,25 +1,30 @@
 import xbmc
 import xbmcaddon
 import xbmcgui
-
 import os
 import time
+import sqlite3
 
+from sqlite3 import Error
 from xml.etree import ElementTree
-
 from resources.libs.common.config import CONFIG
 from resources.libs.common import logging
 from resources.libs.common import tools
+from resources.libs.common import var
 
 ORDER = ['seren',
          'fen',
+         'fenlt',
+         'affen',
          'ezra',
          'coal',
          'pov',
          'umb',
+         'dradis',
+         'taz',
          'shadow',
          'ghost',
-         'base19',
+         'base',
          'unleashed',
          'chains',
          'twisted',
@@ -29,7 +34,9 @@ ORDER = ['seren',
          'blackl',
          'metv',
          'aliunde',
+         'otaku',
          'acctmgr',
+         'allact',
          'myact',
          'rurl']
 
@@ -62,6 +69,34 @@ DEBRIDID = {
         'default_ad'  : 'ad.account_id',
         'data'     : [],
         'activate' : 'Addon.OpenSettings(plugin.video.fen)'},
+    'fenlt': {
+        'name'     : 'Fen Light',
+        'plugin'   : 'plugin.video.fenlight',
+        'saved'    : 'fenlt',
+        'path'     : os.path.join(CONFIG.ADDONS, 'plugin.video.fenlight'),
+        'icon'     : os.path.join(CONFIG.ADDONS, 'plugin.video.fenlight/resources/media/', 'fenlight_icon.png'),
+        'fanart'   : os.path.join(CONFIG.ADDONS, 'plugin.video.fenlight/resources/media/', 'fenlight_fanart.png'),
+        'file'     : os.path.join(CONFIG.DEBRIDFOLD, 'fenlt'),
+        'settings' : os.path.join(CONFIG.ADDON_DATA, 'plugin.video.fenlight/databases', 'settings.db'),
+        'default_rd'  : 'rd.account_id',
+        'default_pm'  : 'pm.account_id',
+        'default_ad'  : 'ad.account_id',
+        'data'     : [],
+        'activate' : 'Addon.OpenSettings(plugin.video.fenlight)'},
+    'affen': {
+        'name'     : 'afFENity',
+        'plugin'   : 'plugin.video.affenity',
+        'saved'    : 'affen',
+        'path'     : os.path.join(CONFIG.ADDONS, 'plugin.video.affenity'),
+        'icon'     : os.path.join(CONFIG.ADDONS, 'plugin.video.affenity/resources/media/', 'affenity_icon.png'),
+        'fanart'   : os.path.join(CONFIG.ADDONS, 'plugin.video.affenity/resources/media/', 'affenity_fanart.png'),
+        'file'     : os.path.join(CONFIG.DEBRIDFOLD, 'affen'),
+        'settings' : os.path.join(CONFIG.ADDON_DATA, 'plugin.video.affenity/databases', 'settings.db'),
+        'default_rd'  : 'rd.account_id',
+        'default_pm'  : 'pm.account_id',
+        'default_ad'  : 'ad.account_id',
+        'data'     : [],
+        'activate' : 'Addon.OpenSettings(plugin.video.affenity)'},
     'ezra': {
         'name'     : 'Ezra',
         'plugin'   : 'plugin.video.ezra',
@@ -77,7 +112,7 @@ DEBRIDID = {
         'data'     : [],
         'activate' : 'Addon.OpenSettings(plugin.video.ezra)'},
     'coal': {
-        'name'     : 'Coalition',
+        'name'     : 'The Coalition',
         'plugin'   : 'plugin.video.coalition',
         'saved'    : 'coal',
         'path'     : os.path.join(CONFIG.ADDONS, 'plugin.video.coalition'),
@@ -118,6 +153,34 @@ DEBRIDID = {
         'default_ad'  : 'alldebridusername',
         'data'     : [],
         'activate' : 'Addon.OpenSettings(plugin.video.umbrella)'},
+    'dradis': {
+        'name'     : 'Dradis',
+        'plugin'   : 'plugin.video.dradis',
+        'saved'    : 'dradis',
+        'path'     : os.path.join(CONFIG.ADDONS, 'plugin.video.dradis'),
+        'icon'     : os.path.join(CONFIG.ADDONS, 'plugin.video.dradis', 'icon.png'),
+        'fanart'   : os.path.join(CONFIG.ADDONS, 'plugin.video.dradis', 'fanart.jpg'),
+        'file'     : os.path.join(CONFIG.DEBRIDFOLD, 'dradis'),
+        'settings' : os.path.join(CONFIG.ADDON_DATA, 'plugin.video.dradis', 'settings.xml'),
+        'default_rd'  : 'realdebrid.username',
+        'default_pm'  : 'premiumize.username',
+        'default_ad'  : 'alldebrid.username',
+        'data'     : [],
+        'activate' : 'Addon.OpenSettings(plugin.video.dradis)'},
+    'taz': {
+        'name'     : 'Taz19',
+        'plugin'   : 'plugin.video.taz19',
+        'saved'    : 'taz',
+        'path'     : os.path.join(CONFIG.ADDONS, 'plugin.video.taz19'),
+        'icon'     : os.path.join(CONFIG.ADDONS, 'plugin.video.taz19', 'icon.png'),
+        'fanart'   : os.path.join(CONFIG.ADDONS, 'plugin.video.taz19', 'fanart.jpg'),
+        'file'     : os.path.join(CONFIG.DEBRIDFOLD, 'taz'),
+        'settings' : os.path.join(CONFIG.ADDON_DATA, 'plugin.video.taz19', 'settings.xml'),
+        'default_rd'  : 'rd.client_id',
+        'default_pm'  : 'pm.account_id',
+        'default_ad'  : 'ad.account_id',
+        'data'     : [],
+        'activate' : 'Addon.OpenSettings(plugin.video.taz19)'},
     'shadow': {
         'name'     : 'Shadow',
         'plugin'   : 'plugin.video.shadow',
@@ -132,20 +195,20 @@ DEBRIDID = {
         'default_ad'  : 'alldebrid.username',
         'data'     : [],
         'activate' : 'Addon.OpenSettings(plugin.video.shadow)'},
-    'base19': {
-        'name'     : 'Base 19',
-        'plugin'   : 'plugin.video.base19',
-        'saved'    : 'base19',
-        'path'     : os.path.join(CONFIG.ADDONS, 'plugin.video.base19'),
-        'icon'     : os.path.join(CONFIG.ADDONS, 'plugin.video.base19', 'icon.png'),
-        'fanart'   : os.path.join(CONFIG.ADDONS, 'plugin.video.base19', 'fanart.jpg'),
+    'base': {
+        'name'     : 'Base',
+        'plugin'   : 'plugin.video.base',
+        'saved'    : 'base',
+        'path'     : os.path.join(CONFIG.ADDONS, 'plugin.video.base'),
+        'icon'     : os.path.join(CONFIG.ADDONS, 'plugin.video.base', 'icon.png'),
+        'fanart'   : os.path.join(CONFIG.ADDONS, 'plugin.video.base', 'fanart.jpg'),
         'file'     : os.path.join(CONFIG.DEBRIDFOLD, 'base19'),
-        'settings' : os.path.join(CONFIG.ADDON_DATA, 'plugin.video.base19', 'settings.xml'),
+        'settings' : os.path.join(CONFIG.ADDON_DATA, 'plugin.video.base', 'settings.xml'),
         'default_rd'  : 'rd.client_id',
         'default_pm'  : 'premiumize.token',
         'default_ad'  : 'alldebrid.username',
         'data'     : [],
-        'activate' : 'Addon.OpenSettings(plugin.video.base19)'},
+        'activate' : 'Addon.OpenSettings(plugin.video.base)'},
     'ghost': {
         'name'     : 'Ghost',
         'plugin'   : 'plugin.video.ghost',
@@ -286,6 +349,20 @@ DEBRIDID = {
         'default_ad'  : 'alldebrid.username',
         'data'     : [],
         'activate' : 'Addon.OpenSettings(plugin.video.aliundek19)'},
+    'otaku': {
+        'name'     : 'Otaku',
+        'plugin'   : 'plugin.video.otaku',
+        'saved'    : 'otaku',
+        'path'     : os.path.join(CONFIG.ADDONS, 'plugin.video.otaku'),
+        'icon'     : os.path.join(CONFIG.ADDONS, 'plugin.video.otaku', 'icon.png'),
+        'fanart'   : os.path.join(CONFIG.ADDONS, 'plugin.video.otaku', 'fanart.jpg'),
+        'file'     : os.path.join(CONFIG.DEBRIDFOLD, 'otaku'),
+        'settings' : os.path.join(CONFIG.ADDON_DATA, 'plugin.video.otaku', 'settings.xml'),
+        'default_rd'  : 'rd.username',
+        'default_pm'  : 'premiumize.username',
+        'default_ad'  : 'alldebrid.username',
+        'data'     : [],
+        'activate' : 'Addon.OpenSettings(plugin.video.otaku)'},
     'acctmgr': {
         'name'     : 'Account Manager',
         'plugin'   : 'script.module.accountmgr',
@@ -300,6 +377,20 @@ DEBRIDID = {
         'default_ad'  : 'alldebrid.username',
         'data'     : [],
         'activate' : 'Addon.OpenSettings(script.module.accountmgr)'},
+    'allact': {
+        'name'     : 'All Accounts',
+        'plugin'   : 'script.module.allaccounts',
+        'saved'    : 'allact',
+        'path'     : os.path.join(CONFIG.ADDONS, 'script.module.allaccounts'),
+        'icon'     : os.path.join(CONFIG.ADDONS, 'script.module.allaccounts', 'icon.png'),
+        'fanart'   : os.path.join(CONFIG.ADDONS, 'script.module.allaccounts', 'fanart.png'),
+        'file'     : os.path.join(CONFIG.DEBRIDFOLD, 'allact'),
+        'settings' : os.path.join(CONFIG.ADDON_DATA, 'script.module.allaccounts', 'settings.xml'),
+        'default_rd'  : 'realdebrid.username',
+        'default_pm'  : 'premiumize.username',
+        'default_ad'  : 'alldebrid.username',
+        'data'     : [],
+        'activate' : 'Addon.OpenSettings(script.module.allaccounts)'},
     'myact': {
         'name'     : 'My Accounts',
         'plugin'   : 'script.module.myaccounts',
@@ -330,37 +421,161 @@ DEBRIDID = {
         'activate' : 'Addon.OpenSettings(script.module.resolveurl)'}
 }
 
+def create_conn(db_file):
+    try:
+        conn = None
+        try:
+            conn = sqlite3.connect(db_file)
+        except Error as e:
+            print(e)
+
+        return conn
+    except:
+        xbmc.log('%s: Debridit_all Failed!' % var.amgr, xbmc.LOGINFO)
+        pass
+    
 def debrid_user_rd(who):
     user_rd = None
     if DEBRIDID[who]:
-        if os.path.exists(DEBRIDID[who]['path']):
+        name = DEBRIDID[who]['name']
+        if os.path.exists(DEBRIDID[who]['path']) and name == 'Fen Light':
             try:
-                add = tools.get_addon_by_id(DEBRIDID[who]['plugin'])
-                user_rd = add.getSetting(DEBRIDID[who]['default_rd'])
+                # Create database connection
+                conn = create_conn(var.fenlt_settings_db)
+                with conn:
+                    cur = conn.cursor()
+                    cur.execute('''SELECT setting_value FROM settings WHERE setting_id = ?''', ('rd.token',)) #Get setting to compare
+                    auth = cur.fetchone()
+                    user_data = str(auth)
+
+                    if user_data == "('empty_setting',)" or user_data == "('',)" or user_data == '' or user_data == None: #Check if addon is authorized
+                        user_rd = None #Return if not authorized
+                    else:
+                        user_rd = user_data #Return if authorized
+                    cur.close()
             except:
+                xbmc.log('%s: Debridit_all_rd Fen Light Failed!' % var.amgr, xbmc.LOGINFO)
                 pass
+        elif os.path.exists(DEBRIDID[who]['path']) and name == 'afFENity':
+            try:
+                conn = create_conn(var.affen_settings_db)
+                with conn:
+                    cur = conn.cursor()
+                    cur.execute('''SELECT setting_value FROM settings WHERE setting_id = ?''', ('rd.token',))
+                    auth = cur.fetchone()
+                    user_data = str(auth)
+
+                    if user_data == "('empty_setting',)" or user_data == "('',)" or user_data == '' or user_data == None:
+                        user_rd = None
+                    else:
+                        user_rd = user_data
+                    cur.close()
+            except:
+                xbmc.log('%s: Debridit_all_rd afFENity Failed!' % var.amgr, xbmc.LOGINFO)
+                pass
+        else:
+            if os.path.exists(DEBRIDID[who]['path']):
+                try:
+                    add = tools.get_addon_by_id(DEBRIDID[who]['plugin'])
+                    user_rd = add.getSetting(DEBRIDID[who]['default_rd'])
+                except:
+                    pass
     return user_rd
 
 def debrid_user_pm(who):
     user_pm = None
     if DEBRIDID[who]:
-        if os.path.exists(DEBRIDID[who]['path']):
+        name = DEBRIDID[who]['name']
+        if os.path.exists(DEBRIDID[who]['path']) and name == 'Fen Light':
             try:
-                add = tools.get_addon_by_id(DEBRIDID[who]['plugin'])
-                user_pm = add.getSetting(DEBRIDID[who]['default_pm'])
+                # Create database connection
+                conn = create_conn(var.fenlt_settings_db)
+                with conn:
+                    cur = conn.cursor()
+                    cur.execute('''SELECT setting_value FROM settings WHERE setting_id = ?''', ('pm.token',)) #Get setting to compare
+                    auth = cur.fetchone()
+                    user_data = str(auth)
+
+                    if user_data == "('empty_setting',)" or user_data == "('',)" or user_data == '' or user_data == None: #Check if addon is authorized
+                        user_pm = None #Return if not authorized
+                    else:
+                        user_pm = user_data #Return if authorized
+                    cur.close()
             except:
+                xbmc.log('%s: Debridit_all_pm Fen Light Failed!' % var.amgr, xbmc.LOGINFO)
                 pass
+        elif os.path.exists(DEBRIDID[who]['path']) and name == 'afFENity':
+            try:
+                conn = create_conn(var.affen_settings_db)
+                with conn:
+                    cur = conn.cursor()
+                    cur.execute('''SELECT setting_value FROM settings WHERE setting_id = ?''', ('pm.token',))
+                    auth = cur.fetchone()
+                    user_data = str(auth)
+
+                    if user_data == "('empty_setting',)" or user_data == "('',)" or user_data == '' or user_data == None:
+                        user_pm = None
+                    else:
+                        user_pm = user_data
+                    cur.close()
+            except:
+                xbmc.log('%s: Debridit_all_rd afFENity Failed!' % var.amgr, xbmc.LOGINFO)
+                pass
+        else:
+            if os.path.exists(DEBRIDID[who]['path']):
+                try:
+                    add = tools.get_addon_by_id(DEBRIDID[who]['plugin'])
+                    user_pm = add.getSetting(DEBRIDID[who]['default_pm'])
+                except:
+                    pass
     return user_pm
 
 def debrid_user_ad(who):
     user_ad = None
     if DEBRIDID[who]:
-        if os.path.exists(DEBRIDID[who]['path']):
+        name = DEBRIDID[who]['name']
+        if os.path.exists(DEBRIDID[who]['path']) and name == 'Fen Light':
             try:
-                add = tools.get_addon_by_id(DEBRIDID[who]['plugin'])
-                user_ad = add.getSetting(DEBRIDID[who]['default_ad'])
+                # Create database connection
+                conn = create_conn(var.fenlt_settings_db)
+                with conn:
+                    cur = conn.cursor()
+                    cur.execute('''SELECT setting_value FROM settings WHERE setting_id = ?''', ('ad.token',)) #Get setting to compare
+                    auth = cur.fetchone()
+                    user_data = str(auth)
+
+                    if user_data == "('empty_setting',)" or user_data == "('',)" or user_data == '' or user_data == None: #Check if addon is authorized
+                        user_ad = None #Return if not authorized
+                    else:
+                        user_ad = user_data #Return if authorized
+                    cur.close()
             except:
+                xbmc.log('%s: Debridit_all_ad Fen Light Failed!' % var.amgr, xbmc.LOGINFO)
                 pass
+        elif os.path.exists(DEBRIDID[who]['path']) and name == 'afFENity':
+            try:
+                conn = create_conn(var.affen_settings_db)
+                with conn:
+                    cur = conn.cursor()
+                    cur.execute('''SELECT setting_value FROM settings WHERE setting_id = ?''', ('ad.token',))
+                    auth = cur.fetchone()
+                    user_data = str(auth)
+
+                    if user_data == "('empty_setting',)" or user_data == "('',)" or user_data == '' or user_data == None:
+                        user_ad = None
+                    else:
+                        user_ad = user_data
+                    cur.close()
+            except:
+                xbmc.log('%s: Debridit_all_rd afFENity Failed!' % var.amgr, xbmc.LOGINFO)
+                pass
+        else:
+            if os.path.exists(DEBRIDID[who]['path']):
+                try:
+                    add = tools.get_addon_by_id(DEBRIDID[who]['plugin'])
+                    user_ad = add.getSetting(DEBRIDID[who]['default_ad'])
+                except:
+                    pass
     return user_ad
 
 def debrid_it(do, who):

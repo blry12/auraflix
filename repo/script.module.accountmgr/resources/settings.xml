@@ -50,7 +50,7 @@
 
 		<setting type="lsep" label="Metadata Providers" />
 		<setting id="meta.enabled" type="bool" visible="true" label="Enable" default="false" />
-		<setting type="action" label="Sync Add-ons" option="close" action="RunScript(script.module.accountmgr, action=metaSync)"  visible="eq(-1,true)" />
+		<setting type="action" label="Sync Add-ons" option="close" action="RunScript(script.module.accountmgr, action=metaReSync)"  visible="eq(-1,true)" />
 		<setting label="32311" type="action" action="RunScript(script.module.accountmgr, action=ShowHelpMeta)" visible="eq(-2,true)" />
 		<setting type="lsep"/>
 		<setting id="fanart.tv.api.key" type="text" label="Fanart.TV API Key" default="" visible="eq(-4,true)"/>
@@ -112,8 +112,8 @@
 		<setting type="action" label="Revoke" option="close" action="PlayMedia(plugin://script.module.acctview/?mode=addonmeta&name=all)"  visible="eq(-3,true)" />
 	</category>
 	<category label="Backup & Restore">
-                <setting type="lsep" label="Backup & Restore Multiple Debrid Accounts" />
-		<setting id="debridall.enabled" type="bool" visible="hidden" label="Enable" default="false" />
+                <setting type="lsep" label="Backup & Restore Multiple Debrid Accounts" visible="eq(1,true)" />
+		<setting id="debridall.enabled" type="bool" visible="true" label="Enable" default="false" />
 		<setting type="action" label="Backup Data" option="close" action="PlayMedia(plugin://script.module.acctview/?mode=backupall&name=all)" visible="eq(-1,true)" />
 		<setting type="action" label="Restore Saved Data" option="close" action="PlayMedia(plugin://script.module.acctview/?mode=restoreall&name=all)" visible="eq(-2,true)" />
 		<setting type="action" label="Clear Saved Data" option="close" action="PlayMedia(plugin://script.module.acctview/?mode=clearall&name=all)" visible="eq(-3,true)" />
@@ -143,27 +143,29 @@
 		<setting type="action" label="Clear Saved Data" option="close" action="PlayMedia(plugin://script.module.acctview/?mode=cleartrakt&name=all)" visible="true" />
 
 		<setting type="lsep" label="Furk/Easynews/FilePursuit" />
-		<setting id="non.enabled" type="bool" visible="hidden" default="false" />
+		<setting id="non.enabled" type="bool" visible="false" label="" default="false" />
 		<setting type="action" label="Backup Data" option="close" action="PlayMedia(plugin://script.module.acctview/?mode=save_non_acctmgr&name=all)"  visible="eq(-1,true)" />
 		<setting type="action" label="Restore Saved Data" option="close" action="PlayMedia(plugin://script.module.acctview/?mode=restore_non&name=all)"  visible="true" />
 		<setting type="action" label="Clear Saved Data" option="close" action="PlayMedia(plugin://script.module.acctview/?mode=clear_non&name=all)"  visible="true" />
 
 		<setting type="lsep" label="Metadata Providers" />
-		<setting id="meta.enabled" type="bool" visible="hidden" default="false" />
+		<setting id="meta.enabled" type="bool" visible="false" label="" default="false" />
 		<setting type="action" label="Backup Data" option="close" action="PlayMedia(plugin://script.module.acctview/?mode=savemeta_acctmgr&name=all)"  visible="eq(-1,true)" />
 		<setting type="action" label="Restore Saved Data" option="close" action="PlayMedia(plugin://script.module.acctview/?mode=restoremeta&name=all)"  visible="true" />
 		<setting type="action" label="Clear Saved Data" option="close" action="PlayMedia(plugin://script.module.acctview/?mode=clearmeta&name=all)"  visible="true" />
 	</category>
 	<category label="Configure Backup">
-		<setting type="lsep" label="Configure Backup Directory" />
+		<setting id="backupenable" type="bool" label="Enable Auto-Backup" default="false" />
+		<setting label="40105" type="text" />
+		<setting type="lsep" label="Set Backup Directory" />
 		<setting type="action" label="Set Backup Directory" option="close" action="RunScript(script.module.accountmgr, action=SetBackupFolder)" />
 		<setting type="action" label="Reset Backup Directory" option="close" action="RunScript(script.module.accountmgr, action=ResetBackupFolder)" />
-		<setting type="lsep" label="Backup Directory" />
-		<setting label="Current Backup Directory" type="folder" id="backupfolder" source="" option="writeable" default="special://userdata/addon_data/script.module.accountmgr/" enable="false" visible="eq(-2,)" />
+		<setting type="lsep" label="Set Custom Backup Directory" />
+        	<setting id="backupfolder" type="text" label="-" default="special://userdata/addon_data/script.module.accountmgr/" visible="true" />
 	</category>
 	<category label="Advanced">
 		<setting type="lsep" label="Startup Services" />
-		<setting id="checkAddonUpdates" type="bool" label="Update Notification Service" default="false" />
+		<setting id="checkAddonUpdates" type="bool" label="Update Notification Service" default="true" />
 		<setting label="40092" type="text" />
       	<setting id="trakt.service"  type="bool" label="Trakt Service" default="true"/>
 		<setting label="40093" type="text" />

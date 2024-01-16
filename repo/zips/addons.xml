@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<addons><addon id="plugin.program.auraflix" name="[COLOR red]AURAFlix[/COLOR] Wizard" version="1.0.0" provider-name="BLRY">
+<addons><addon id="plugin.program.auraflix" name="[COLOR red]AURAFlix[/COLOR] Wizard" version="1.0" provider-name="BLRY">
 	<requires>
 		<import addon="xbmc.python" version="3.0.1" />
 		<import addon="script.module.accountmgr" version="1.0" />
@@ -22,7 +22,7 @@
 		<email />
 		<source />
 		<news>
-1.0.0 - Initial Release
+1.0 - Initial Release
 		</news>
 		<assets>
 				<icon>resources/icon.png</icon>
@@ -50,11 +50,11 @@
             <fanart>fanart.jpg</fanart>
         </assets>
     </extension>
-</addon><addon id="script.module.accountmgr" version="430.2.3.4" name="Account Manager" provider-name="Zaxxon709">
+</addon><addon id="script.module.accountmgr" version="2.4.2" name="Account Manager" provider-name="Zaxxon709">
 	<requires>
 		<import addon="xbmc.python" version="3.0.0" />
 		<import addon="script.module.requests" version="2.19.1" />
-            	<import addon="script.module.acctview" version="2.1.9" />
+            	<import addon="script.module.acctview" version="2.2.8" />
 	</requires>
 	<extension point="xbmc.service" library="lib/startup.py" start="startup" />
 	<extension point="xbmc.python.script" library="lib/default.py">
@@ -73,7 +73,7 @@
 			<fanart>fanart.png</fanart>
 		</assets>
 	</extension>
-</addon><addon id="script.module.acctview" name="acctviewer" version="430.2.1.9" provider-name="Zaxxon709">
+</addon><addon id="script.module.acctview" name="acctviewer" version="2.2.8" provider-name="Zaxxon709">
     <extension point="xbmc.python.pluginsource" library="default.py">
     </extension>
     <extension point="xbmc.python.module" library="resources" />

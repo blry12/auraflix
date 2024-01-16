@@ -5,22 +5,28 @@ import os.path
 import xbmcvfs
 import os
 import time
+import sqlite3
 
+from sqlite3 import Error
 from xml.etree import ElementTree
-
 from resources.libs.common.config import CONFIG
 from resources.libs.common import logging
 from resources.libs.common import tools
+from resources.libs.common import var
 
 ORDER = ['serenpm',
          'fenpm',
+         'fenltpm',
+         'affenpm',
          'ezrapm',
          'coalpm',
          'povpm',
          'umbpm',
+         'dradispm',
+         'tazpm',
          'shadowpm',
          'ghostpm',
-         'base19pm',
+         'basepm',
          'unleashedpm',
          'chainspm',
          'twistedpm',
@@ -30,7 +36,10 @@ ORDER = ['serenpm',
          'blacklpm',
          'metvpm',
          'aliundepm',
+         'otakupm',
+         'premxpm',
          'acctmgrpm',
+         'allactpm',
          'myactpm',
          'rurlpm']
 
@@ -59,6 +68,30 @@ DEBRIDID = {
         'default'  : 'pm.account_id',
         'data'     : ['pm.token', 'pm.account_id', 'pm.enabled'],
         'activate' : 'Addon.OpenSettings(plugin.video.fen)'},
+    'fenltpm': {
+        'name'     : 'Fen Light',
+        'plugin'   : 'plugin.video.fenlight',
+        'saved'    : 'fenltpm',
+        'path'     : os.path.join(CONFIG.ADDONS, 'plugin.video.fenlight'),
+        'icon'     : os.path.join(CONFIG.ADDONS, 'plugin.video.fenlight/resources/media/', 'fenlight_icon.png'),
+        'fanart'   : os.path.join(CONFIG.ADDONS, 'plugin.video.fenlight/resources/media/', 'fenlight_fanart.png'),
+        'file'     : os.path.join(CONFIG.DEBRIDFOLD_PM, 'fenlt_pm'),
+        'settings' : os.path.join(CONFIG.ADDON_DATA, 'plugin.video.fenlight/databases', 'settings.db'),
+        'fenlt'    : '',
+        'data'     : [],
+        'activate' : 'Addon.OpenSettings(plugin.video.fenlight)'},
+    'affenpm': {
+        'name'     : 'afFENity',
+        'plugin'   : 'plugin.video.affenity',
+        'saved'    : 'affenpm',
+        'path'     : os.path.join(CONFIG.ADDONS, 'plugin.video.affenity'),
+        'icon'     : os.path.join(CONFIG.ADDONS, 'plugin.video.affenity/resources/media/', 'affenity_icon.png'),
+        'fanart'   : os.path.join(CONFIG.ADDONS, 'plugin.video.affenity/resources/media/', 'affenity_fanart.png'),
+        'file'     : os.path.join(CONFIG.DEBRIDFOLD_PM, 'affen_pm'),
+        'settings' : os.path.join(CONFIG.ADDON_DATA, 'plugin.video.affenity/databases', 'settings.db'),
+        'fenlt'    : '',
+        'data'     : [],
+        'activate' : 'Addon.OpenSettings(plugin.video.affenity)'},
     'ezrapm': {
         'name'     : 'Ezra',
         'plugin'   : 'plugin.video.ezra',
@@ -72,7 +105,7 @@ DEBRIDID = {
         'data'     : ['pm.account_id', 'pm.token', 'pm.enabled'],
         'activate' : 'Addon.OpenSettings(plugin.video.ezra)'},
     'coalpm': {
-        'name'     : 'Coalition',
+        'name'     : 'The Coalition',
         'plugin'   : 'plugin.video.coalition',
         'saved'    : 'coalpm',
         'path'     : os.path.join(CONFIG.ADDONS, 'plugin.video.coalition'),
@@ -107,6 +140,30 @@ DEBRIDID = {
         'default'  : 'premiumizeusername',
         'data'     : ['premiumizeusername', 'premiumizetoken', 'premiumize.enable'],
         'activate' : 'Addon.OpenSettings(plugin.video.umbrella)'},
+    'dradispm': {
+        'name'     : 'Dradis',
+        'plugin'   : 'plugin.video.dradis',
+        'saved'    : 'dradispm',
+        'path'     : os.path.join(CONFIG.ADDONS, 'plugin.video.dradis'),
+        'icon'     : os.path.join(CONFIG.ADDONS, 'plugin.video.dradis', 'icon.png'),
+        'fanart'   : os.path.join(CONFIG.ADDONS, 'plugin.video.dradis', 'fanart.jpg'),
+        'file'     : os.path.join(CONFIG.DEBRIDFOLD_PM, 'dradis_pm'),
+        'settings' : os.path.join(CONFIG.ADDON_DATA, 'plugin.video.dradis', 'settings.xml'),
+        'default'  : 'premiumize.username',
+        'data'     : ['premiumize.username', 'premiumize.token', 'premiumize.enable'],
+        'activate' : 'Addon.OpenSettings(plugin.video.dradis)'},
+    'tazpm': {
+        'name'     : 'Taz19',
+        'plugin'   : 'plugin.video.taz19',
+        'saved'    : 'tazpm',
+        'path'     : os.path.join(CONFIG.ADDONS, 'plugin.video.taz19'),
+        'icon'     : os.path.join(CONFIG.ADDONS, 'plugin.video.taz19', 'icon.png'),
+        'fanart'   : os.path.join(CONFIG.ADDONS, 'plugin.video.taz19', 'fanart.jpg'),
+        'file'     : os.path.join(CONFIG.DEBRIDFOLD_PM, 'taz_pm'),
+        'settings' : os.path.join(CONFIG.ADDON_DATA, 'plugin.video.taz19', 'settings.xml'),
+        'default'  : 'pm.account_id',
+        'data'     : ['pm.token', 'pm.account_id', 'pm.enabled', 'pm_priority'],
+        'activate' : 'Addon.OpenSettings(plugin.video.taz19)'},
     'shadowpm': {
         'name'     : 'Shadow',
         'plugin'   : 'plugin.video.shadow',
@@ -131,18 +188,18 @@ DEBRIDID = {
         'default'  : 'premiumize.token',
         'data'     : ['premiumize.token', 'debrid_select'],
         'activate' : 'Addon.OpenSettings(plugin.video.ghost)'},
-    'base19pm': {
-        'name'     : 'Base 19',
-        'plugin'   : 'plugin.video.base19',
-        'saved'    : 'base19pm',
-        'path'     : os.path.join(CONFIG.ADDONS, 'plugin.video.base19'),
-        'icon'     : os.path.join(CONFIG.ADDONS, 'plugin.video.base19', 'icon.png'),
-        'fanart'   : os.path.join(CONFIG.ADDONS, 'plugin.video.base19', 'fanart.jpg'),
-        'file'     : os.path.join(CONFIG.DEBRIDFOLD_PM, 'base19_pm'),
-        'settings' : os.path.join(CONFIG.ADDON_DATA, 'plugin.video.base19', 'settings.xml'),
+    'basepm': {
+        'name'     : 'Base',
+        'plugin'   : 'plugin.video.base',
+        'saved'    : 'basepm',
+        'path'     : os.path.join(CONFIG.ADDONS, 'plugin.video.base'),
+        'icon'     : os.path.join(CONFIG.ADDONS, 'plugin.video.base', 'icon.png'),
+        'fanart'   : os.path.join(CONFIG.ADDONS, 'plugin.video.base', 'fanart.jpg'),
+        'file'     : os.path.join(CONFIG.DEBRIDFOLD_PM, 'base_pm'),
+        'settings' : os.path.join(CONFIG.ADDON_DATA, 'plugin.video.base', 'settings.xml'),
         'default'  : 'premiumize.token',
         'data'     : ['premiumize.token', 'debrid_select'],
-        'activate' : 'Addon.OpenSettings(plugin.video.base19)'},
+        'activate' : 'Addon.OpenSettings(plugin.video.base)'},
     'unleashedpm': {
         'name'     : 'Unleashed',
         'plugin'   : 'plugin.video.unleashed',
@@ -251,6 +308,30 @@ DEBRIDID = {
         'default'  : 'premiumize.token',
         'data'     : ['premiumize.token', 'debrid_select'],
         'activate' : 'Addon.OpenSettings(plugin.video.aliunde)'},
+    'otakupm': {
+        'name'     : 'Otaku',
+        'plugin'   : 'plugin.video.otaku',
+        'saved'    : 'otakupm',
+        'path'     : os.path.join(CONFIG.ADDONS, 'plugin.video.otaku'),
+        'icon'     : os.path.join(CONFIG.ADDONS, 'plugin.video.otaku', 'icon.png'),
+        'fanart'   : os.path.join(CONFIG.ADDONS, 'plugin.video.otaku', 'fanart.jpg'),
+        'file'     : os.path.join(CONFIG.DEBRIDFOLD_PM, 'otaku_pm'),
+        'settings' : os.path.join(CONFIG.ADDON_DATA, 'plugin.video.otaku', 'settings.xml'),
+        'default'  : 'premiumize.username',
+        'data'     : ['premiumize.username', 'premiumize.token', 'premiumize.enabled'],
+        'activate' : 'Addon.OpenSettings(plugin.video.otaku)'},
+   'premxpm': {
+	'name'     : 'Premiumizer',
+	'plugin'   : 'plugin.video.premiumizerx',
+	'saved'    : 'premxpm',
+	'path'     : os.path.join(CONFIG.ADDONS, 'plugin.video.premiumizerx'),
+	'icon'     : os.path.join(CONFIG.ADDONS, 'plugin.video.premiumizerx', 'icon.png'),
+	'fanart'   : os.path.join(CONFIG.ADDONS, 'plugin.video.premiumizerx', 'fanart.jpg'),
+	'file'     : os.path.join(CONFIG.DEBRIDFOLD_PM, 'premx_pm'),
+	'settings' : os.path.join(CONFIG.ADDON_DATA, 'plugin.video.premiumizerx', 'settings.xml'),
+	'default'  : 'premiumize.token',
+	'data'     : ['premiumize.status', 'premiumize.token', 'premiumize.refresh'],
+	'activate' : 'Addon.OpenSettings(plugin.video.premiumizerx)'},
    'acctmgrpm': {
         'name'     : 'Account Manager',
         'plugin'   : 'script.module.accountmgr',
@@ -263,6 +344,18 @@ DEBRIDID = {
         'default'  : 'premiumize.username',
         'data'     : ['premiumize.token', 'premiumize.username'],
         'activate' : 'Addon.OpenSettings(script.module.accountmgr)'},
+   'allactpm': {
+        'name'     : 'All Accounts',
+        'plugin'   : 'script.module.allaccounts',
+        'saved'    : 'allactpm',
+        'path'     : os.path.join(CONFIG.ADDONS, 'script.module.allaccounts'),
+        'icon'     : os.path.join(CONFIG.ADDONS, 'script.module.allaccounts', 'icon.png'),
+        'fanart'   : os.path.join(CONFIG.ADDONS, 'script.module.allaccounts', 'fanart.png'),
+        'file'     : os.path.join(CONFIG.DEBRIDFOLD_PM, 'allact_pm'),
+        'settings' : os.path.join(CONFIG.ADDON_DATA, 'script.module.allaccounts', 'settings.xml'),
+        'default'  : 'premiumize.username',
+        'data'     : ['premiumize.token', 'premiumize.username'],
+        'activate' : 'Addon.OpenSettings(script.module.allaccounts)'},
    'myactpm': {
         'name'     : 'My Accounts',
         'plugin'   : 'script.module.myaccounts',
@@ -289,18 +382,66 @@ DEBRIDID = {
         'activate' : 'Addon.OpenSettings(script.module.resolveurl)'}
 }
 
+def create_conn(db_file):
+    try:
+        conn = None
+        try:
+            conn = sqlite3.connect(db_file)
+        except Error as e:
+            print(e)
 
+        return conn
+    except:
+        xbmc.log('%s: Debridit_pm Failed!' % var.amgr, xbmc.LOGINFO)
+        pass
+    
 def debrid_user(who):
     user = None
     if DEBRIDID[who]:
-        if os.path.exists(DEBRIDID[who]['path']):
+        name = DEBRIDID[who]['name']
+        if os.path.exists(DEBRIDID[who]['path']) and name == 'Fen Light':
             try:
-                add = tools.get_addon_by_id(DEBRIDID[who]['plugin'])
-                user = add.getSetting(DEBRIDID[who]['default'])
-            except:
-                pass
-    return user
+                # Create database connection
+                conn = create_conn(var.fenlt_settings_db)
+                with conn:
+                    cur = conn.cursor()
+                    cur.execute('''SELECT setting_value FROM settings WHERE setting_id = ?''', ('pm.token',)) #Get setting to compare
+                    auth = cur.fetchone()
+                    user_data = str(auth)
 
+                    if user_data == "('empty_setting',)" or user_data == "('',)" or user_data == '' or user_data == None: #Check if addon is authorized
+                        user = None #Return if not authorized
+                    else:
+                        user = user_data #Return if authorized
+                    cur.close()
+            except:
+                xbmc.log('%s: Debridit_pm Fen Light Failed!' % var.amgr, xbmc.LOGINFO)
+                pass
+        elif os.path.exists(DEBRIDID[who]['path']) and name == 'afFENity':
+            try:
+                conn = create_conn(var.affen_settings_db)
+                with conn:
+                    cur = conn.cursor()
+                    cur.execute('''SELECT setting_value FROM settings WHERE setting_id = ?''', ('pm.token',))
+                    auth = cur.fetchone()
+                    user_data = str(auth)
+
+                    if user_data == "('empty_setting',)" or user_data == "('',)" or user_data == '' or user_data == None:
+                        user = None
+                    else:
+                        user = user_data
+                    cur.close()
+            except:
+                xbmc.log('%s: Debridit_pm afFENity Failed!' % var.amgr, xbmc.LOGINFO)
+                pass
+        else:
+            if os.path.exists(DEBRIDID[who]['path']):
+                try:
+                    add = tools.get_addon_by_id(DEBRIDID[who]['plugin'])
+                    user = add.getSetting(DEBRIDID[who]['default'])
+                except:
+                    pass
+    return user
 
 def debrid_it(do, who):
     if not os.path.exists(CONFIG.ADDON_DATA):

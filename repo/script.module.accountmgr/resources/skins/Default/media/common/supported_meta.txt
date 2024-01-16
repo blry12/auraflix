@@ -1,22 +1,28 @@
 
 1.  Seren                  
 2.  Fen
-3.  Ezra
-4.  Coalition
-5.  POV                   
-6.  Umbrella
-7.  The Crew 
-8.  Homelander 
-9.  Quicksilver
-10. Chains Genocide           
-11. Shazam
-12. Nightwing
-13. Alvin
-14. Moria
-15. Absolution
-16. 9 Lives
-17. TMDb Helper
-18. Embuary Info
-19. Metahandler
-20. PVR Artwork Module
-21. My Accounts
+3.  Fen Light
+4.  afFENity
+5.  Ezra
+6.  The Coalition
+7.  POV                   
+8.  Umbrella
+9.  Dradis
+10. Taz19
+11. The Crew 
+12. Homelander 
+13. Quicksilver
+14. Chains Genocide           
+15. Shazam
+16. Nightwing
+17. Alvin
+18. TheLab
+19. Moria
+20. Absolution
+21. Nine Lives
+22. TMDb Helper
+23. Embuary Info
+24. Metahandler
+25. PVR Artwork Module
+26. All Accounts
+27. My Accounts

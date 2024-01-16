@@ -152,7 +152,7 @@ elif action == 'alldebridRevoke':
 	from accountmgr.modules import alldebrid
 	control.function_monitor(alldebrid.AllDebrid().revoke)
 
-# ReSync Multiple Debrid Accounts
+#Sync Multiple Debrid Accounts
 elif action == 'ReSyncAll': #Sync additional add-ons for all services after Account Manager is already authorized
         #Real-Debrid
 	if str(var.chk_accountmgr_tk_rd) != '': #Skip sync if Account Mananger is not authorized
@@ -178,7 +178,7 @@ elif action == 'ReSyncAll': #Sync additional add-ons for all services after Acco
 	if str(var.chk_accountmgr_tk_ad) == '': #If Account Mananger is not Authorized notify user
                 notification('Account Manager', 'All-Debrid NOT Authorized!', icon=ad_icon)
 
-#Meta Accounts
+#Sync Meta Accounts
 elif action == 'tmdbAuth':
 	from accountmgr.modules import tmdb
 	control.function_monitor(tmdb.Auth().create_session_id)
@@ -187,57 +187,22 @@ elif action == 'tmdbRevoke':
 	from accountmgr.modules import tmdb
 	control.function_monitor(tmdb.Auth().revoke_session_id)
 
-elif action == 'metaSync':
-	if str(var.chk_accountmgr_fanart) != '' or str(var.chk_accountmgr_omdb) != '' or str(var.chk_accountmgr_mdb) != '' or str(var.chk_accountmgr_imdb) != '' or str(var.chk_accountmgr_tmdb) != '' or str(var.chk_accountmgr_tmdb_user) != '' or str(var.chk_accountmgr_tvdb) != '': #Skip sync if no meta account data in Account Manager
-                notification('Account Manager', 'Sync in progress, please wait!', icon=amgr_icon)
-                from accountmgr.modules import meta_sync
-                meta_sync.Auth().meta_auth()
-                xbmc.executebuiltin('PlayMedia(plugin://script.module.acctview/?mode=savemeta&name=all)') #Save Metadata               
-                xbmc.sleep(4000)
-                notification('Account Manager', 'Sync Complete!', icon=amgr_icon)
-	else: #If Account Mananger is not Authorized notify user
-                notification('Account Manager', 'No Meta Data to Sync!', icon=amgr_icon)
-                
 elif action == 'metaReSync':
 	if str(var.chk_accountmgr_fanart) != '' or str(var.chk_accountmgr_omdb) != '' or str(var.chk_accountmgr_mdb) != '' or str(var.chk_accountmgr_imdb) != '' or str(var.chk_accountmgr_tmdb) != '' or str(var.chk_accountmgr_tmdb_user) != '' or str(var.chk_accountmgr_tvdb) != '': #Skip sync if no meta account data in Account Manager
                 notification('Account Manager', 'Sync in progress, please wait!', icon=amgr_icon)
                 from accountmgr.modules import meta_sync
-                control.function_monitor(meta_sync.Auth().meta_auth)
+                meta_sync.Auth().meta_auth()
+                if var.setting('backupenable') == 'true': #Check if backup service is enabled
+                        xbmc.executebuiltin('PlayMedia(plugin://script.module.acctview/?mode=savemeta&name=all)') #Save Metadata               
+                        xbmc.sleep(3000)
                 notification('Account Manager', 'Sync Complete!', icon=amgr_icon)
+                xbmc.sleep(3000)
+                xbmcgui.Dialog().ok('Account Manager', 'To save changes, please close Kodi, Press OK to force close Kodi')
+                os._exit(1)
 	else: #If Account Mananger is not Authorized notify user
                 notification('Account Manager', 'No Meta Data to Sync!', icon=amgr_icon)
 
-#Furk                
-elif action == 'furkSync':
-	if str(var.chk_accountmgr_furk) != '': #Skip sync if no Furk data in Account Manager
-                notification('Account Manager', 'Sync in progress, please wait!', icon=furk_icon)
-                from accountmgr.modules import furk_sync
-                control.function_monitor(furk_sync.Auth().furk_auth)
-                notification('Account Manager', 'Sync Complete!', icon=furk_icon)
-	else: #If Account Mananger is not Authorized notify user
-                notification('Account Manager', 'No Furk Data to Sync!', icon=furk_icon)
-
-#Easynews              
-elif action == 'easySync':
-	if str(var.chk_accountmgr_easy) != '': #Skip sync if no Easynews data in Account Manager
-                notification('Account Manager', 'Sync in progress, please wait!', icon=easy_icon)
-                from accountmgr.modules import easy_sync
-                control.function_monitor(easy_sync.Auth().easy_auth)
-                notification('Account Manager', 'Sync Complete!', icon=easy_icon)
-	else: #If Account Mananger is not Authorized notify user
-                notification('Account Manager', 'No Easynews Data to Sync!', icon=easy_icon)
-
-#FilePursuit               
-elif action == 'fileSync':
-	if str(var.chk_accountmgr_file) != '': #Skip sync if no FilePursuit data in Account Manager
-                notification('Account Manager', 'Sync in progress, please wait!', icon=file_icon)
-                from accountmgr.modules import filepursuit_sync
-                control.function_monitor(filepursuit_sync.Auth().file_auth)
-                notification('Account Manager', 'Sync Complete!', icon=file_icon)
-	else: #If Account Mananger is not Authorized notify user
-                notification('Account Manager', 'No FilePursuit Data to Sync!', icon=file_icon)
-
-#Furk/Easynews/FilePursuit Sync All
+#Sync Furk/Easynews/FilePursuit
 elif action == 'SyncAll':
         if str(var.chk_accountmgr_furk) != '' or str(var.chk_accountmgr_easy) != '' or str(var.chk_accountmgr_file) != '':
                 
@@ -260,10 +225,13 @@ elif action == 'SyncAll':
                         filepursuit_sync.Auth().file_auth()
                 else: #If Account Mananger is not Authorized notify user
                         notification('Account Manager', 'No FilePursuit Data to Sync!', icon=file_icon)
-
-                xbmc.executebuiltin('PlayMedia(plugin://script.module.acctview/?mode=save_nondebrid&name=all)') #Save Non-Debrid Data
-                xbmc.sleep(4000)
+                if var.setting('backupenable') == 'true': #Check if backup service is enabled
+                        xbmc.executebuiltin('PlayMedia(plugin://script.module.acctview/?mode=save_nondebrid&name=all)') #Save Non-Debrid Data
+                        xbmc.sleep(3000)
                 notification('Account Manager', 'Sync Complete!', icon=amgr_icon)
+                xbmc.sleep(3000)
+                xbmcgui.Dialog().ok('Account Manager', 'To save changes, please close Kodi, Press OK to force close Kodi')
+                os._exit(1)
         else:
                 notification('Account Manager', 'No Data to Sync!', icon=amgr_icon)
                 

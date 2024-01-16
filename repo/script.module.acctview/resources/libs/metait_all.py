@@ -1,29 +1,36 @@
 import xbmc
 import xbmcaddon
 import xbmcgui
-
+import os.path
+import xbmcvfs
 import os
 import time
+import sqlite3
 
+from sqlite3 import Error
 from xml.etree import ElementTree
-
 from resources.libs.common.config import CONFIG
 from resources.libs.common import logging
 from resources.libs.common import tools
-
+from resources.libs.common import var
 
 ORDER = ['seren',
          'fen',
+         'fenlt',
+         'affen',
          'ezra',
          'coal',
          'pov',
          'umb',
+         'dradis',
+         'taz',
          'thecrew',
          'homelander',
          'quicksilver',
          'genocide',
          'shazam',
          'nightwing',
+         'thelab',
          'alvin',
          'moria',
          'absolution',
@@ -33,6 +40,7 @@ ORDER = ['seren',
          'metah',
          'pvr',
          'acctmgr',
+         'allact',
          'myact']
 
 DEBRIDID = {
@@ -78,6 +86,48 @@ DEBRIDID = {
         'default_tmdb_session'  : '',
         'data'     : ['tmdb_api', 'imdb_user', 'fanart_client_key'],
         'activate' : 'Addon.OpenSettings(plugin.video.fen)'},
+    'fenlt': {
+        'name'     : 'Fen Light',
+        'plugin'   : 'plugin.video.fenlight',
+        'saved'    : 'fenlt',
+        'path'     : os.path.join(CONFIG.ADDONS, 'plugin.video.fenlight'),
+        'icon'     : os.path.join(CONFIG.ADDONS, 'plugin.video.fenlight/resources/media/', 'fenlight_icon.png'),
+        'fanart'   : os.path.join(CONFIG.ADDONS, 'plugin.video.fenlight/resources/media/', 'fenlight_fanart.png'),
+        'file'     : os.path.join(CONFIG.DEBRIDFOLD_RD, 'fenlt'),
+        'settings' : os.path.join(CONFIG.ADDON_DATA, 'plugin.video.fenlight.databases', 'settings.db'),
+        'default'    : '',
+        'default_fanart'  : '',
+        'default_omdb'  : '',
+        'default_mdb'  : '',
+        'default_imdb'  : '',
+        'default_tvdb'  : '',
+        'default_tmdb'  : '',
+        'default_tmdb_user'  : '',
+        'default_tmdb_pass'  : '',
+        'default_tmdb_session'  : '',
+        'data'     : [],
+        'activate' : 'Addon.OpenSettings(plugin.video.fenlight)'},
+    'affen': {
+        'name'     : 'afFENity',
+        'plugin'   : 'plugin.video.affenity',
+        'saved'    : 'affen',
+        'path'     : os.path.join(CONFIG.ADDONS, 'plugin.video.affenity'),
+        'icon'     : os.path.join(CONFIG.ADDONS, 'plugin.video.affenity/resources/media/', 'affenity_icon.png'),
+        'fanart'   : os.path.join(CONFIG.ADDONS, 'plugin.video.affenity/resources/media/', 'affenity_fanart.png'),
+        'file'     : os.path.join(CONFIG.DEBRIDFOLD_RD, 'affen'),
+        'settings' : os.path.join(CONFIG.ADDON_DATA, 'plugin.video.affenity/databases', 'settings.db'),
+        'default'    : '',
+        'default_fanart'  : '',
+        'default_omdb'  : '',
+        'default_mdb'  : '',
+        'default_imdb'  : '',
+        'default_tvdb'  : '',
+        'default_tmdb'  : '',
+        'default_tmdb_user'  : '',
+        'default_tmdb_pass'  : '',
+        'default_tmdb_session'  : '',
+        'data'     : [],
+        'activate' : 'Addon.OpenSettings(plugin.video.affenity)'},
     'ezra': {
         'name'     : 'Ezra',
         'plugin'   : 'plugin.video.ezra',
@@ -100,7 +150,7 @@ DEBRIDID = {
         'data'     : ['tmdb_api', 'imdb_user', 'fanart_client_key'],
         'activate' : 'Addon.OpenSettings(plugin.video.ezra)'},
     'coal': {
-        'name'     : 'Coalition',
+        'name'     : 'The Coalition',
         'plugin'   : 'plugin.video.coalition',
         'saved'    : 'coal',
         'path'     : os.path.join(CONFIG.ADDONS, 'plugin.video.coalition'),
@@ -162,6 +212,48 @@ DEBRIDID = {
         'default_tmdb_session'  : 'tmdb.sessionid',
         'data'     : ['tmdb.apikey', 'tmdbusername', 'tmdbpassword', 'tmdb.sessionid', 'imdbuser', 'mdblist.api', 'fanart_tv.api_key'],
         'activate' : 'Addon.OpenSettings(plugin.video.umbrella)'},
+    'dradis': {
+        'name'     : 'Dradis',
+        'plugin'   : 'plugin.video.dradis',
+        'saved'    : 'dradis',
+        'path'     : os.path.join(CONFIG.ADDONS, 'plugin.video.dradis'),
+        'icon'     : os.path.join(CONFIG.ADDONS, 'plugin.video.dradis', 'icon.png'),
+        'fanart'   : os.path.join(CONFIG.ADDONS, 'plugin.video.dradis', 'fanart.jpg'),
+        'file'     : os.path.join(CONFIG.METAFOLD, 'dradis_meta'),
+        'settings' : os.path.join(CONFIG.ADDON_DATA, 'plugin.video.dradis', 'settings.xml'),
+        'default'  : '',
+        'default_fanart'  : 'fanart_tv.api_key',
+        'default_omdb'  : '',
+        'default_mdb'  : '',
+        'default_imdb'  : 'imdb.user',
+        'default_tvdb'  : '',
+        'default_tmdb'  : 'tmdb.api.key',
+        'default_tmdb_user'  : 'tmdb.username',
+        'default_tmdb_pass'  : 'tmdb.password',
+        'default_tmdb_session'  : 'tmdb.session_id',
+        'data'     : ['tmdb.api.key', 'tmdb.username', 'tmdb.password', 'tmdb.session_id', 'imdb.user', 'fanart_tv.api_key'],
+        'activate' : 'Addon.OpenSettings(plugin.video.dradis)'},
+    'taz': {
+        'name'     : 'Taz19',
+        'plugin'   : 'plugin.video.taz19',
+        'saved'    : 'taz',
+        'path'     : os.path.join(CONFIG.ADDONS, 'plugin.video.taz19'),
+        'icon'     : os.path.join(CONFIG.ADDONS, 'plugin.video.taz19', 'icon.png'),
+        'fanart'   : os.path.join(CONFIG.ADDONS, 'plugin.video.taz19', 'fanart.jpg'),
+        'file'     : os.path.join(CONFIG.METAFOLD, 'taz_meta'),
+        'settings' : os.path.join(CONFIG.ADDON_DATA, 'plugin.video.taz19', 'settings.xml'),
+        'default'  : '',
+        'default_fanart'  : 'fanart_client_key',
+        'default_omdb'  : '',
+        'default_mdb'  : '',
+        'default_imdb'  : 'imdb_user',
+        'default_tvdb'  : '',
+        'default_tmdb'  : 'tmdb_api',
+        'default_tmdb_user'  : '',
+        'default_tmdb_pass'  : '',
+        'default_tmdb_session'  : '',
+        'data'     : ['tmdb_api', 'imdb_user', 'fanart_client_key'],
+        'activate' : 'Addon.OpenSettings(plugin.video.taz19)'},
    'thecrew': {
         'name'     : 'The Crew',
         'plugin'   : 'plugin.video.thecrew',
@@ -288,6 +380,27 @@ DEBRIDID = {
         'default_tmdb_session'  : '',
         'data'     : ['tm.user', 'imdb.user', 'fanart.tv.user'],
         'activate' : 'Addon.OpenSettings(plugin.video.nightwing)'},
+   'thelab': {
+        'name'     : 'TheLab',
+        'plugin'   : 'plugin.video.thelab',
+        'saved'    : 'thelab',
+        'path'     : os.path.join(CONFIG.ADDONS, 'plugin.video.thelab'),
+        'icon'     : os.path.join(CONFIG.ADDONS, 'plugin.video.thelab', 'icon.png'),
+        'fanart'   : os.path.join(CONFIG.ADDONS, 'plugin.video.thelab', 'fanart.jpg'),
+        'file'     : os.path.join(CONFIG.METAFOLD, 'thelab_meta'),
+        'settings' : os.path.join(CONFIG.ADDON_DATA, 'plugin.video.thelab', 'settings.xml'),
+        'default'  : '',
+        'default_fanart'  : 'fanart.tv.user',
+        'default_omdb'  : '',
+        'default_mdb'  : '',
+        'default_imdb'  : 'imdb.user',
+        'default_tvdb'  : '',
+        'default_tmdb'  : 'tm.user',
+        'default_tmdb_user'  : '',
+        'default_tmdb_pass'  : '',
+        'default_tmdb_session'  : '',
+        'data'     : ['tm.user', 'imdb.user', 'fanart.tv.user'],
+        'activate' : 'Addon.OpenSettings(plugin.video.thelab)'},
    'alvin': {
         'name'     : 'Alvin',
         'plugin'   : 'plugin.video.alvin',
@@ -477,6 +590,27 @@ DEBRIDID = {
         'default_tmdb_session'  : 'tmdb.session_id',
         'data'     : ['tmdb.api.key', 'tmdb.username', 'tmdb.password', 'tmdb.session_id', 'imdb.user', 'tvdb.api.key', 'omdb.api.key', 'mdb.api.key', 'fanart.tv.api.key'],
         'activate' : 'Addon.OpenSettings(script.module.accountmgr)'},
+    'allact': {
+        'name'     : 'All Accounts',
+        'plugin'   : 'script.module.allaccounts',
+        'saved'    : 'allact',
+        'path'     : os.path.join(CONFIG.ADDONS, 'script.module.allaccounts'),
+        'icon'     : os.path.join(CONFIG.ADDONS, 'script.module.allaccounts', 'icon.png'),
+        'fanart'   : os.path.join(CONFIG.ADDONS, 'script.module.allaccounts', 'fanart.png'),
+        'file'     : os.path.join(CONFIG.METAFOLD, 'allact_meta'),
+        'settings' : os.path.join(CONFIG.ADDON_DATA, 'script.module.allaccounts', 'settings.xml'),
+        'default'  : '',
+        'default_fanart'  : 'fanart.tv.api.key',
+        'default_omdb'  : '',
+        'default_mdb'  : '',
+        'default_imdb'  : 'imdb.user',
+        'default_tvdb'  : '',
+        'default_tmdb'  : 'tmdb.api.key',
+        'default_tmdb_user'  : 'tmdb.username',
+        'default_tmdb_pass'  : 'tmdb.password',
+        'default_tmdb_session'  : 'tmdb.session_id',
+        'data'     : ['tmdb.api.key', 'tmdb.username', 'tmdb.password', 'tmdb.session_id', 'imdb.user', 'fanart.tv.api.key'],
+        'activate' : 'Addon.OpenSettings(script.module.allaccounts)'},
     'myact': {
         'name'     : 'My Accounts',
         'plugin'   : 'script.module.myaccounts',
@@ -499,11 +633,30 @@ DEBRIDID = {
         'data'     : ['tmdb.api.key', 'tmdb.username', 'tmdb.password', 'tmdb.session_id', 'imdb.user', 'fanart.tv.api.key'],
         'activate' : 'Addon.OpenSettings(script.module.myaccounts)'}
 }
+
+def create_conn(db_file):
+    try:
+        conn = None
+        try:
+            conn = sqlite3.connect(db_file)
+        except Error as e:
+            print(e)
+
+        return conn
+    except:
+        xbmc.log('%s: Metait_all.py Failed!' % var.amgr, xbmc.LOGINFO)
+        pass
     
 def debrid_user_fanart(who):
     user_fanart = None
     if DEBRIDID[who]:
         if os.path.exists(DEBRIDID[who]['path']):
+            name = DEBRIDID[who]['name']
+            if name == 'Fen Light':
+                user_fanart = ''
+            if name == 'afFENity':
+                user_fanart = ''
+        else:
             try:
                 add = tools.get_addon_by_id(DEBRIDID[who]['plugin'])
                 user_fanart = add.getSetting(DEBRIDID[who]['default_fanart'])
@@ -514,18 +667,61 @@ def debrid_user_fanart(who):
 def debrid_user_omdb(who):
     user_omdb = None
     if DEBRIDID[who]:
-        if os.path.exists(DEBRIDID[who]['path']):
+        name = DEBRIDID[who]['name']
+        if os.path.exists(DEBRIDID[who]['path']) and name == 'Fen Light':
             try:
-                add = tools.get_addon_by_id(DEBRIDID[who]['plugin'])
-                user_omdb = add.getSetting(DEBRIDID[who]['default_omdb'])
+                # Create database connection
+                conn = create_conn(var.fenlt_settings_db)
+                with conn:
+                    cur = conn.cursor()
+                    cur.execute('''SELECT setting_value FROM settings WHERE setting_id = ?''', ('omdb_api',)) #Get setting to compare
+                    auth = cur.fetchone()
+                    user_data = str(auth)
+
+                    if user_data == "('empty_setting',)" or user_data == "('',)" or user_data == '' or user_data == None: #Check if addon is authorized
+                        user_omdb = None #Return if not authorized
+                    else:
+                        user_omdb = user_data #Return if authorized
+                    cur.close()
             except:
+                xbmc.log('%s: Metait_all Fen Light Failed!' % var.amgr, xbmc.LOGINFO)
                 pass
+        elif os.path.exists(DEBRIDID[who]['path']) and name == 'afFENity':
+            try:
+                conn = create_conn(var.affen_settings_db)
+                with conn:
+                    cur = conn.cursor()
+                    cur.execute('''SELECT setting_value FROM settings WHERE setting_id = ?''', ('omdb_api',))
+                    auth = cur.fetchone()
+                    user_data = str(auth)
+
+                    if user_data == "('empty_setting',)" or user_data == "('',)" or user_data == '' or user_data == None:
+                        user_omdb = None
+                    else:
+                        user_omdb = user_data
+                    cur.close()
+            except:
+                xbmc.log('%s: Metait_all afFENity Failed!' % var.amgr, xbmc.LOGINFO)
+                pass
+        else:
+            if os.path.exists(DEBRIDID[who]['path']):
+                try:
+                    add = tools.get_addon_by_id(DEBRIDID[who]['plugin'])
+                    user_omdb = add.getSetting(DEBRIDID[who]['default_omdb'])
+                except:
+                    pass
     return user_omdb
 
 def debrid_user_mdb(who):
     user_mdb = None
     if DEBRIDID[who]:
         if os.path.exists(DEBRIDID[who]['path']):
+            name = DEBRIDID[who]['name']
+            if name == 'Fen Light':
+                user_mdb = ''
+            if name == 'afFENity':
+                user_mdb = ''
+        else:
             try:
                 add = tools.get_addon_by_id(DEBRIDID[who]['plugin'])
                 user_mdb = add.getSetting(DEBRIDID[who]['default_mdb'])
@@ -537,6 +733,12 @@ def debrid_user_imdb(who):
     user_imdb = None
     if DEBRIDID[who]:
         if os.path.exists(DEBRIDID[who]['path']):
+            name = DEBRIDID[who]['name']
+            if name == 'Fen Light':
+                user_imdb = ''
+            if name == 'afFENity':
+                user_imdb = ''
+        else:
             try:
                 add = tools.get_addon_by_id(DEBRIDID[who]['plugin'])
                 user_imdb = add.getSetting(DEBRIDID[who]['default_imdb'])
@@ -548,6 +750,12 @@ def debrid_user_tvdb(who):
     user_tvdb = None
     if DEBRIDID[who]:
         if os.path.exists(DEBRIDID[who]['path']):
+            name = DEBRIDID[who]['name']
+            if name == 'Fen Light':
+                user_tvdb = ''
+            if name == 'afFENity':
+                user_tvdb = ''
+        else:
             try:
                 add = tools.get_addon_by_id(DEBRIDID[who]['plugin'])
                 user_tvdb = add.getSetting(DEBRIDID[who]['default_tvdb'])
@@ -559,6 +767,12 @@ def debrid_user_tmdb(who):
     user_tmdb = None
     if DEBRIDID[who]:
         if os.path.exists(DEBRIDID[who]['path']):
+            name = DEBRIDID[who]['name']
+            if name == 'Fen Light':
+                user_tmdb = ''
+            if name == 'afFENity':
+                user_tmdb = ''
+        else:
             try:
                 add = tools.get_addon_by_id(DEBRIDID[who]['plugin'])
                 user_tmdb = add.getSetting(DEBRIDID[who]['default_tmdb'])
@@ -570,6 +784,12 @@ def debrid_user_tmdb_user(who):
     user_tmdb_user = None
     if DEBRIDID[who]:
         if os.path.exists(DEBRIDID[who]['path']):
+            name = DEBRIDID[who]['name']
+            if name == 'Fen Light':
+                user_tmdb_user = ''
+            if name == 'afFENity':
+                user_tmdb_user = ''
+        else:
             try:
                 add = tools.get_addon_by_id(DEBRIDID[who]['plugin'])
                 user_tmdb_user = add.getSetting(DEBRIDID[who]['default_tmdb_user'])
@@ -581,6 +801,12 @@ def debrid_user_tmdb_pass(who):
     user_tmdb_pass = None
     if DEBRIDID[who]:
         if os.path.exists(DEBRIDID[who]['path']):
+            name = DEBRIDID[who]['name']
+            if name == 'Fen Light':
+                user_tmdb_pass = ''
+            if name == 'afFENity':
+                user_tmdb_pass = ''
+        else:
             try:
                 add = tools.get_addon_by_id(DEBRIDID[who]['plugin'])
                 user_tmdb_pass = add.getSetting(DEBRIDID[who]['default_tmdb_pass'])
@@ -592,6 +818,12 @@ def debrid_user_tmdb_session(who):
     user_tmdb_session = None
     if DEBRIDID[who]:
         if os.path.exists(DEBRIDID[who]['path']):
+            name = DEBRIDID[who]['name']
+            if name == 'Fen Light':
+                user_tmdb_session = ''
+            if name == 'afFENity':
+                user_tmdb_session = ''
+        else:
             try:
                 add = tools.get_addon_by_id(DEBRIDID[who]['plugin'])
                 user_tmdb_session = add.getSetting(DEBRIDID[who]['default_tmdb_session'])
@@ -692,23 +924,26 @@ def update_debrid(do, who):
             logging.log('Debrid Info Not Found for {0}'.format(name))
     elif do == 'clearaddon':
         logging.log('{0} SETTINGS: {1}'.format(name, settings))
-        if os.path.exists(settings):
-            try:
-                tree = ElementTree.parse(settings)
-                root = tree.getroot()
-                
-                for setting in root.findall('setting'):
-                    if setting.attrib['id'] in data:
-                        logging.log('Removing Setting: {0}'.format(setting.attrib))
-                        root.remove(setting)
-                            
-                tree.write(settings)
-                
-            except Exception as e:
-                logging.log("[Debrid Info] Unable to Clear Addon {0} ({1})".format(who, str(e)), level=xbmc.LOGERROR)
-    xbmc.executebuiltin('Container.Refresh()')
-    
-    revoke_meta() #Restore default API keys for all add-ons
+        if name == 'Fen Light':
+            pass
+        else:
+            if os.path.exists(settings):
+                try:
+                    tree = ElementTree.parse(settings)
+                    root = tree.getroot()
+                    
+                    for setting in root.findall('setting'):
+                        if setting.attrib['id'] in data:
+                            logging.log('Removing Setting: {0}'.format(setting.attrib))
+                            root.remove(setting)
+                                
+                    tree.write(settings)
+                    
+                except Exception as e:
+                    logging.log("[Debrid Info] Unable to Clear Addon {0} ({1})".format(who, str(e)), level=xbmc.LOGERROR)
+        xbmc.executebuiltin('Container.Refresh()')
+        
+        revoke_meta() #Restore default API keys for all add-ons
 
 def auto_update(who):
     if who == 'all':
@@ -775,7 +1010,6 @@ def revoke_meta():
         try:
             addon = xbmcaddon.Addon("plugin.video.ezra")
             addon.setSetting("fanart_client_key", var.ezra_fan)                        
-            addon = xbmcaddon.Addon("plugin.video.ezra")
             addon.setSetting("tmdb_api", var.ezra_tmdb)
         except:
             pass
@@ -784,32 +1018,46 @@ def revoke_meta():
         try:
             addon = xbmcaddon.Addon("plugin.video.fen")
             addon.setSetting("fanart_client_key", var.fen_fan)                        
-            addon = xbmcaddon.Addon("plugin.video.fen")
             addon.setSetting("tmdb_api", var.fen_tmdb)
         except:
             pass
 
+    if xbmcvfs.exists(var.chk_coal) and xbmcvfs.exists(var.chkset_coal):
+        try:
+            addon = xbmcaddon.Addon("plugin.video.coalition")
+            addon.setSetting("fanart_client_key", var.coal_fan)                        
+            addon.setSetting("tmdb_api", var.coal_tmdb)
+        except:
+            pass
+        
     if xbmcvfs.exists(var.chk_pov) and xbmcvfs.exists(var.chkset_pov):
-
-        addon = xbmcaddon.Addon("plugin.video.pov")
-        addon.setSetting("fanart_client_key", var.pov_fan)                        
-        addon = xbmcaddon.Addon("plugin.video.pov")
-        addon.setSetting("tmdb_api", var.pov_tmdb)
-
+        try:
+            addon = xbmcaddon.Addon("plugin.video.pov")
+            addon.setSetting("fanart_client_key", var.pov_fan)                        
+            addon.setSetting("tmdb_api", var.pov_tmdb)
+        except:
+            pass
+        
+    if xbmcvfs.exists(var.chk_taz) and xbmcvfs.exists(var.chkset_taz):
+        try:
+            addon = xbmcaddon.Addon("plugin.video.taz19")
+            addon.setSetting("fanart_client_key", var.taz_fan)                        
+            addon.setSetting("tmdb_api", var.taz_tmdb)
+        except:
+            pass
+        
     if xbmcvfs.exists(var.chk_home) and xbmcvfs.exists(var.chkset_home):
         try:
             addon = xbmcaddon.Addon("plugin.video.home")
             addon.setSetting("fanart.tv.user", var.home_fan)                        
-            addon = xbmcaddon.Addon("plugin.video.home")
             addon.setSetting("tm.user", var.home_tmdb)
         except:
             pass
 
     if xbmcvfs.exists(var.chk_crew) and xbmcvfs.exists(var.chkset_crew):
         try:
-            addon = xbmcaddon.Addon("plugin.video.Thecrew")
-            addon.setSetting("fanart.tv.user", var.crew_fan)                        
             addon = xbmcaddon.Addon("plugin.video.thecrew")
+            addon.setSetting("fanart.tv.user", var.crew_fan)
             addon.setSetting("tm.user", var.crew_tmdb)
         except:
             pass

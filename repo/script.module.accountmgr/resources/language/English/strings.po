@@ -491,3 +491,7 @@ msgstr ""
 msgctxt "#40104"
 msgid "[COLOR FFA0C12C]-- View Changelog --[/COLOR]"
 msgstr ""
+
+msgctxt "#40105"
+msgid "[COLOR FF696969]-- Backup Trakt & Debrid data during the authorization process --[/COLOR]"
+msgstr ""

@@ -31,18 +31,15 @@ def trakt_menu():
             menu2 = create_save_data_menu('Trakt', trakt)
             menu.append((CONFIG.THEME2.format('{0} Settings'.format(name)), 'RunPlugin(plugin://{0}/?mode=opensettings&name={1}&url=trakt)'.format(CONFIG.ADDON_ID, trakt)))
 
-            directory.add_file('{0}'.format(name), {'mode': 'opentraktsettings', 'name': trakt}, icon=icon, description='View Your Trakt Authorizations', fanart=fanart, themeit=CONFIG.THEME3)
-            
-            if not os.path.exists(path):
-                directory.add_file('[COLOR red]Addon Data: Not Installed[/COLOR]', icon=icon, description='View Your Trakt Authorizations', fanart=fanart, menu=menu)
-            elif not auser:
-                directory.add_file('[COLOR red]Addon Data: Not Authorised[/COLOR]', {'mode': 'authtrakt', 'name': trakt}, icon=icon, description='View Your Trakt Authorizations', fanart=fanart, menu=menu)
+            if not auser:
+                directory.add_file('{0} - [COLOR red]Not Authorized[/COLOR]'.format(name), {'name': trakt}, icon=icon, description='Your Trakt Authorizations', fanart=fanart, themeit=CONFIG.THEME3)
             else:
-                directory.add_file('[COLOR springgreen]Addon Data: {0}[/COLOR]'.format(auser), {'mode': 'authtrakt', 'name': trakt}, icon=icon, description='View Your Trakt Authorizations', fanart=fanart, menu=menu)
+                directory.add_file('{0} - [COLOR springgreen]Authorized[/COLOR]'.format(name), {'name': trakt}, icon=icon, description='Your Trakt Authorizations', fanart=fanart, themeit=CONFIG.THEME3)
+
 
 def debrid_menu():
     from resources.libs import debridit_rd
-
+    
     for debrid in debridit_rd.ORDER:
         if xbmc.getCondVisibility('System.HasAddon({0})'.format(debridit_rd.DEBRIDID[debrid]['plugin'])):
             name = debridit_rd.DEBRIDID[debrid]['name']
@@ -57,15 +54,11 @@ def debrid_menu():
             menu2 = create_save_data_menu('Debrid', debrid)
             menu.append((CONFIG.THEME2.format('{0} Settings'.format(name)), 'RunPlugin(plugin://{0}/?mode=opensettings&name={1}&url=debrid)'.format(CONFIG.ADDON_ID, debrid)))
 
-            directory.add_file('{0}'.format(name), {'mode': 'opendebridsettings', 'name': debrid}, icon=icon, description='View Your Real-Debrid Authorizations', fanart=fanart, themeit=CONFIG.THEME3)
-
-            if not os.path.exists(path):
-                directory.add_file('[COLOR red]Addon Data: Not Installed[/COLOR]', icon=icon, description='View Your Real-Debrid Authorizations', fanart=fanart, menu=menu)
-            elif not auser:
-                directory.add_file('[COLOR red]Addon Data: Not Authorized[/COLOR]', {'mode': 'authdebrid', 'name': debrid}, icon=icon, description='View Your Real-Debrid Authorizations', fanart=fanart, menu=menu)
+            if not auser:
+                directory.add_file('{0} - [COLOR red]Not Authorized[/COLOR]'.format(name), {'name': debrid}, icon=icon, description='Your Real-Debrid Authorizations', fanart=fanart, themeit=CONFIG.THEME3)
             else:
-                directory.add_file('[COLOR springgreen]Addon Data: {0}[/COLOR]'.format(auser), icon=icon, description='View Your Real-Debrid Authorizations', fanart=fanart, menu=menu)
-                
+                directory.add_file('{0} - [COLOR springgreen]Authorized[/COLOR]'.format(name), {'name': debrid}, icon=icon, description='Your Real-Debrid Authorizations', fanart=fanart, themeit=CONFIG.THEME3)
+
 def premiumize_menu():
     from resources.libs import debridit_pm
 
@@ -83,15 +76,10 @@ def premiumize_menu():
             menu2 = create_save_data_menu('Debrid', debrid)
             menu.append((CONFIG.THEME2.format('{0} Settings'.format(name)), 'RunPlugin(plugin://{0}/?mode=opensettings&name={1}&url=debrid)'.format(CONFIG.ADDON_ID, debrid)))
 
-            directory.add_file('{0}'.format(name), {'mode': 'opendebridsettings', 'name': debrid}, icon=icon, description='View Your Premiumize Authorizations', fanart=fanart, themeit=CONFIG.THEME3)
-
-            if not os.path.exists(path):
-                directory.add_file('[COLOR red]Addon Data: Not Installed[/COLOR]', icon=icon, description='View Your Premiumize Authorizations', fanart=fanart, menu=menu)
-            elif not auser:
-                directory.add_file('[COLOR red]Addon Data: Not Authorized[/COLOR]', {'mode': 'authdebrid', 'name': debrid}, icon=icon, description='View Your Premiumize Authorizations', fanart=fanart, menu=menu)
+            if not auser:
+                directory.add_file('{0} - [COLOR red]Not Authorized[/COLOR]'.format(name), {'name': debrid}, icon=icon, description='Your Premiumize Authorizations', fanart=fanart, themeit=CONFIG.THEME3)
             else:
-                directory.add_file('[COLOR springgreen]Addon Data: {0}[/COLOR]'.format(auser), icon=icon, description='View Your Premiumize Authorizations', fanart=fanart, menu=menu)
-
+                directory.add_file('{0} - [COLOR springgreen]Authorized[/COLOR]'.format(name), {'name': debrid}, icon=icon, description='Your Premiumize Authorizations', fanart=fanart, themeit=CONFIG.THEME3)
 
 def alldebrid_menu():
     from resources.libs import debridit_ad
@@ -110,15 +98,10 @@ def alldebrid_menu():
             menu2 = create_save_data_menu('Debrid', debrid)
             menu.append((CONFIG.THEME2.format('{0} Settings'.format(name)), 'RunPlugin(plugin://{0}/?mode=opensettings&name={1}&url=debrid)'.format(CONFIG.ADDON_ID, debrid)))
 
-            directory.add_file('{0}'.format(name), {'mode': 'opendebridsettings', 'name': debrid}, icon=icon, description='View Your All-Debrid Authorizations', fanart=fanart, themeit=CONFIG.THEME3)
-
-            if not os.path.exists(path):
-                directory.add_file('[COLOR red]Addon Data: Not Installed[/COLOR]', icon=icon, description='View Your All-Debrid Authorizations', fanart=fanart, menu=menu)
-            elif not auser:
-                directory.add_file('[COLOR red]Addon Data: Not Authorized[/COLOR]', {'mode': 'authdebrid', 'name': debrid}, icon=icon, description='View Your All-Debrid Authorizations', fanart=fanart, menu=menu)
+            if not auser:
+                directory.add_file('{0} - [COLOR red]Not Authorized[/COLOR]'.format(name), {'name': debrid}, icon=icon, description='Your All-Debrid Authorizations', fanart=fanart, themeit=CONFIG.THEME3)
             else:
-                directory.add_file('[COLOR springgreen]Addon Data: {0}[/COLOR]'.format(auser), icon=icon, description='View Your All-Debrid Authorizations', fanart=fanart, menu=menu)
-
+                directory.add_file('{0} - [COLOR springgreen]Authorized[/COLOR]'.format(name), {'name': debrid}, icon=icon, description='Your All-Debrid Authorizations', fanart=fanart, themeit=CONFIG.THEME3)
 
 def all_accounts_menu():
     from resources.libs import debridit_all
@@ -139,24 +122,24 @@ def all_accounts_menu():
             menu2 = create_save_data_menu('Debrid', debrid)
             menu.append((CONFIG.THEME2.format('{0} Settings'.format(name)), 'RunPlugin(plugin://{0}/?mode=opensettings&name={1}&url=debrid)'.format(CONFIG.ADDON_ID, debrid)))
 
-            directory.add_file('{0}'.format(name), {'mode': 'opendebridsettings', 'name': debrid}, icon=icon, description='View Your Real-Debrid, Premiumize, and All-Debrid Authorizations', fanart=fanart, themeit=CONFIG.THEME3)
-
+            directory.add_file('{0}'.format(name), {'name': debrid}, icon=icon, description='Your Debrid Authorizations', fanart=fanart, themeit=CONFIG.THEME3)
+            
             if not user_rd:
-                directory.add_file('[COLOR red]Real-Debrid - Not Authorized[/COLOR]', {'mode': 'authdebrid', 'name': debrid}, icon=icon, description='View Your Real-Debrid, Premiumize, and All-Debrid Authorizations', fanart=fanart, menu=menu)
+                directory.add_file('Real-Debrid - [COLOR red]Not Authorized[/COLOR]', {'name': debrid}, icon=icon, description='Your Debrid Authorizations', fanart=fanart, themeit=CONFIG.THEME3)
             else:
-                directory.add_file('[COLOR springgreen]Real-Debrid Data: {0}[/COLOR]'.format(user_rd), icon=icon, description='View Your Real-Debrid, Premiumize, and All-Debrid Authorizations', fanart=fanart, menu=menu)
-
+                directory.add_file('Real-Debrid - [COLOR springgreen]Authorized[/COLOR]', {'name': debrid}, icon=icon, description='Your Debrid Authorizations', fanart=fanart, themeit=CONFIG.THEME3)
+            
             if not user_pm:
-                directory.add_file('[COLOR red]Premiumize - Not Authorized[/COLOR]', {'mode': 'authdebrid', 'name': debrid}, icon=icon, description='View Your Real-Debrid, Premiumize, and All-Debrid Authorizations', fanart=fanart, menu=menu)
+                directory.add_file('Premiumize - [COLOR red]Not Authorized[/COLOR]', {'name': debrid}, icon=icon, description='Your Debrid Authorizations', fanart=fanart, themeit=CONFIG.THEME3)
             else:
-                directory.add_file('[COLOR springgreen]Premiumize Data: {0}[/COLOR]'.format(user_pm), icon=icon, description='View Your Real-Debrid, Premiumize, and All-Debrid Authorizations', fanart=fanart, menu=menu)
-
+                directory.add_file('Premiumize - [COLOR springgreen]Authorized[/COLOR]', {'name': debrid}, icon=icon, description='Your Debrid Authorizations', fanart=fanart, themeit=CONFIG.THEME3)
+            
             if not user_ad:
-                directory.add_file('[COLOR red]All-Debrid - Not Authorized[/COLOR]', {'mode': 'authdebrid', 'name': debrid}, icon=icon, description='View Your Real-Debrid, Premiumize, and All-Debrid Authorizations', fanart=fanart, menu=menu)
+                directory.add_file('All-Debrid - [COLOR red]Not Authorized[/COLOR]', {'name': debrid}, icon=icon, description='Your Debrid Authorizations', fanart=fanart, themeit=CONFIG.THEME3)
             else:
-                directory.add_file('[COLOR springgreen]All-Debrid Data: {0}[/COLOR]'.format(user_ad), icon=icon, description='View Your Real-Debrid, Premiumize, and All-Debrid Authorizations', fanart=fanart, menu=menu)
+                directory.add_file('All-Debrid - [COLOR springgreen]Authorized[/COLOR]', {'name': debrid}, icon=icon, description='Your Debrid Authorizations', fanart=fanart, themeit=CONFIG.THEME3)
+            
             directory.add_separator_allaccts()
-
 
 def nondebrid_accounts_menu():
     from resources.libs import non_debrid_all
@@ -177,7 +160,7 @@ def nondebrid_accounts_menu():
             menu2 = create_save_data_menu('Debrid', debrid)
             menu.append((CONFIG.THEME2.format('{0} Settings'.format(name)), 'RunPlugin(plugin://{0}/?mode=opensettings&name={1}&url=debrid)'.format(CONFIG.ADDON_ID, debrid)))
 
-            directory.add_file('{0}'.format(name), {'mode': 'opendebridsettings', 'name': debrid}, icon=icon, description='View Your Furk, Easynews, and FilePursuit Accounts', fanart=fanart, themeit=CONFIG.THEME3)
+            directory.add_file('{0}'.format(name), {'name': debrid}, icon=icon, description='View Your Furk, Easynews, and FilePursuit Accounts', fanart=fanart, themeit=CONFIG.THEME3)
 
             if user_furk == None or len(user_furk) == 1:
                 directory.add_file('[COLOR red]Furk - No Data Found![/COLOR]', {'mode': 'authdebrid', 'name': debrid}, icon=icon, description='View Your Furk, Easynews, and FilePursuit Accounts', fanart=fanart, menu=menu)
@@ -194,7 +177,6 @@ def nondebrid_accounts_menu():
             else:
                 pass
             
-
             if user_file == None or len(user_file) == 1:
                 directory.add_file('[COLOR red]FilePursuit - No Data Found![/COLOR]', {'mode': 'authdebrid', 'name': debrid}, icon=icon, description='View Your Furk, Easynews, and FilePursuit Accounts', fanart=fanart, menu=menu)
             elif len(user_file) > 1:
@@ -233,7 +215,6 @@ def meta_accounts_menu():
 
             if user_fanart == None or len(user_fanart) == 1:
                 directory.add_file('[COLOR red]Fanart.TV API Key - No Data Found![/COLOR]', {'mode': 'authdebrid', 'name': debrid}, icon=icon, description='View Your Metadata Accounts', fanart=fanart, menu=menu)
-                continue
             elif len(user_fanart) > 1:
                 directory.add_file('[COLOR springgreen]Fanart.TV API Key: {0}[/COLOR]'.format(user_fanart), icon=icon, description='View Your Metadata Accounts', fanart=fanart, menu=menu)
             else:
@@ -241,11 +222,10 @@ def meta_accounts_menu():
 
             if user_omdb == None or len(user_omdb) == 1:
                 directory.add_file('[COLOR red]OMDb API Key - No Data Found![/COLOR]', {'mode': 'authdebrid', 'name': debrid}, icon=icon, description='View Your Metadata Accounts', fanart=fanart, menu=menu)
-            elif not user_omdb == None and len(user_omdb) > 1:
+            elif len(user_omdb) > 1:
                 directory.add_file('[COLOR springgreen]OMDb API Key: {0}[/COLOR]'.format(user_omdb), icon=icon, description='View Your Metadata Accounts', fanart=fanart, menu=menu)
             else:
                 pass
-            
 
             if user_mdb == None or len(user_mdb) == 1:
                 directory.add_file('[COLOR red]MDbList API Key - No Data Found![/COLOR]', {'mode': 'authdebrid', 'name': debrid}, icon=icon, description='View Your Metadata Accounts', fanart=fanart, menu=menu)
@@ -254,14 +234,12 @@ def meta_accounts_menu():
             else:
                 pass
 
-                
             if user_imdb == None or len(user_imdb) == 1:
                 directory.add_file('[COLOR red]IMDb API Key - No Data Found![/COLOR]', {'mode': 'authdebrid', 'name': debrid}, icon=icon, description='View Your Metadata Accounts', fanart=fanart, menu=menu)
             elif len(user_imdb) > 1:
                 directory.add_file('[COLOR springgreen]IMDb API Key: {0}[/COLOR]'.format(user_imdb), icon=icon, description='View Your Metadata Accounts', fanart=fanart, menu=menu)
             else:
                 pass
-
 
             if user_tvdb == None or len(user_tvdb) == 1:
                 directory.add_file('[COLOR red]TVDb API Key - No Data Found![/COLOR]', {'mode': 'authdebrid', 'name': debrid}, icon=icon, description='View Your Metadata Accounts', fanart=fanart, menu=menu)
@@ -270,14 +248,12 @@ def meta_accounts_menu():
             else:
                 pass
 
-
             if user_tmdb == None or len(user_tmdb) == 1:
                 directory.add_file('[COLOR red]TMDb API Key - No Data Found![/COLOR]', {'mode': 'authdebrid', 'name': debrid}, icon=icon, description='View Your Metadata Accounts', fanart=fanart, menu=menu)
             elif len(user_tmdb) > 1:
                 directory.add_file('[COLOR springgreen]TMDb API Key: {0}[/COLOR]'.format(user_tmdb), icon=icon, description='View Your Metadata Accounts', fanart=fanart, menu=menu)
             else:
                 pass
-
 
             if user_tmdb_user == None or len(user_tmdb_user) == 1:
                 directory.add_file('[COLOR red]TMDb Username - No Data Found![/COLOR]', {'mode': 'authdebrid', 'name': debrid}, icon=icon, description='View Your Metadata Accounts', fanart=fanart, menu=menu)
@@ -286,14 +262,12 @@ def meta_accounts_menu():
             else:
                 pass
 
-
             if user_tmdb_pass == None or len(user_tmdb_pass) == 1:
                 directory.add_file('[COLOR red]TMDb Password - No Data Found![/COLOR]', {'mode': 'authdebrid', 'name': debrid}, icon=icon, description='View Your Metadata Accounts', fanart=fanart, menu=menu)
             elif len(user_tmdb_pass) > 1:
                 directory.add_file('[COLOR springgreen]TMDb Password: {0}[/COLOR]'.format(user_tmdb_pass), icon=icon, description='View Your Metadata Accounts', fanart=fanart, menu=menu)
             else:
                 pass
-
 
             if user_tmdb_session == None or len(user_tmdb) == 1:
                 directory.add_file('[COLOR red]TMDb Session ID - No Data Found![/COLOR]', {'mode': 'authdebrid', 'name': debrid}, icon=icon, description='View Your Metadata Accounts', fanart=fanart, menu=menu)
