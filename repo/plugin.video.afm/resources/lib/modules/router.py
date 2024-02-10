@@ -42,8 +42,8 @@ def routing(sys):
 			from modules.sources import Sources
 			return Sources().playback_prep(params)
 		if mode == 'playback.video':
-			from modules.player import AFMPlayer
-			return AFMPlayer().run(_get('url', None), _get('obj', None))
+			from modules.player import afmPlayer
+			return afmPlayer().run(_get('url', None), _get('obj', None))
 	if 'choice' in mode:
 		from indexers import dialogs
 		return exec('dialogs.%s(params)' % mode)
@@ -241,7 +241,13 @@ def routing(sys):
 		return Sources().debridPacks(_get('provider'), _get('name'), _get('magnet_url'), _get('info_hash'))
 	if mode == 'open_settings':
 		from modules.kodi_utils import open_settings
-		return open_settings(_get('query', '0.0'), _get('addon', 'plugin.video.AFM'))
+		return open_settings(_get('query', '0.0'), _get('addon', 'plugin.video.afm'))
 	if mode == 'hide_unhide_progress_items':
 		from modules.watched_status import hide_unhide_progress_items
-		hide_unhide_progress_items(params)
+		return hide_unhide_progress_items(params)
+	if mode == 'update_check':
+		from modules.updater import update_check
+		return update_check()
+	if mode == 'open_external_scraper_settings':
+		from modules.kodi_utils import external_scraper_settings
+		return external_scraper_settings()

@@ -1,8 +1,8 @@
 # Kodi Media Center language file
-# Addon Name: AFM
+# Addon Name: afm
 # Addon id: plugin.video.afm
-# Addon Provider: Tiki
-# Translator English: Tiki
+# Addon Provider: BLRY12
+# Translator English: BLRY12
 msgid ""
 msgstr ""
 
@@ -2349,6 +2349,10 @@ msgctxt "#32788"
 msgid "Open Options for Context Menu (Media)"
 msgstr ""
 
+msgctxt "#32789"
+msgid "Check for Updates"
+msgstr ""
+
 msgctxt "#32790"
 msgid "Settings Refreshed"
 msgstr ""
@@ -3250,11 +3254,7 @@ msgid "Choose Files"
 msgstr ""
 
 msgctxt "#33015"
-msgid "Use Torrent Services"
-msgstr ""
-
-msgctxt "#33016"
-msgid "Use Hoster Services"
+msgid "Open External Scraper Settings"
 msgstr ""
 
 msgctxt "#33017"
@@ -3898,8 +3898,44 @@ msgctxt "#33175"
 msgid "Rating (desc)"
 msgstr ""
 
+msgctxt "#33176"
+msgid "afm Updater"
+msgstr ""
+
+msgctxt "#33177"
+msgid "Installed Version: [B]%s[/B][CR]Online Version: [B]%s[/B][CR][CR] "
+msgstr ""
+
+msgctxt "#33178"
+msgid "[B]No Update Available[/B]"
+msgstr ""
+
+msgctxt "#33179"
+msgid "[B]An Update is Available[/B][CR]Perform Update?"
+msgstr ""
+
 msgctxt "#33180"
 msgid "Sorting - Generic TV Show Lists"
+msgstr ""
+
+msgctxt "#33181"
+msgid "afm Update Occuring"
+msgstr ""
+
+msgctxt "#33182"
+msgid "afm Update Available"
+msgstr ""
+
+msgctxt "#33183"
+msgid "Error Updating.[CR]Please install new update manually"
+msgstr ""
+
+msgctxt "#33184"
+msgid "Success.[CR]afm updated to version [B]%s[/B]"
+msgstr ""
+
+msgctxt "#33185"
+msgid "Manage Addon Updates"
 msgstr ""
 
 msgctxt "#33186"
@@ -3910,49 +3946,21 @@ msgctxt "#33187"
 msgid "First Aired (desc)"
 msgstr ""
 
+msgctxt "#33188"
+msgid "Update Action"
+msgstr ""
+
+msgctxt "#33189"
+msgid "Automatic"
+msgstr ""
+
+msgctxt "#33190"
+msgid "Delay Before Running (secs)"
+msgstr ""
+
 
 ###################################################################################################################################
 
-msgctxt "#32789"
-msgid ""
-msgstr ""
-
-msgctxt "#33176"
-msgid ""
-msgstr ""
-
-msgctxt "#33177"
-msgid ""
-msgstr ""
-
-msgctxt "#33178"
-msgid ""
-msgstr ""
-
-msgctxt "#33179"
-msgid ""
-msgstr ""
-
-msgctxt "#33181"
-msgid ""
-msgstr ""
-
-msgctxt "#33182"
-msgid ""
-msgstr ""
-
-msgctxt "#33183"
-msgid ""
-msgstr ""
-
-msgctxt "#33184"
-msgid ""
-msgstr ""
-
-msgctxt "#33185"
-msgid ""
-msgstr ""
-
-msgctxt "#33188"
+msgctxt "#33016"
 msgid ""
 msgstr ""

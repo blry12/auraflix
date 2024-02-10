@@ -48,13 +48,15 @@ debridcache_db = translatePath(path_join(database_path_raw, 'debridcache.db'))
 external_db = translatePath(path_join(database_path_raw, 'providerscache2.db'))
 img_url = 'https://i.imgur.com/%s.png'
 invoker_switch_dict = {'true': 'false', 'false': 'true'}
-empty_poster, item_jump, item_next = img_url % icons.box_office, img_url % icons.item_jump, img_url % icons.item_next
+empty_poster, item_jump, nextpage = img_url % icons.box_office, img_url % icons.item_jump, img_url % icons.nextpage
+nextpage_landscape, item_jump_landscape = img_url % icons.nextpage_landscape, img_url % icons.item_jump_landscape
 tmdb_default_api, fanarttv_default_api = 'b370b60447737762ca38457bd77579b3', 'fa836e1c874ba95ab08a14ee88e05565'
 current_dbs = ('navigator.db', 'watched.db', 'favourites.db', 'traktcache4.db', 'maincache.db', 'metacache2.db', 'debridcache.db', 'providerscache2.db', 'settings.db')
 int_window_prop, pause_services_prop, suppress_sett_dict_prop, highlight_prop = 'afm.internal_results.%s', 'afm.pause_services', 'afm.suppress_settings_dict', 'afm.main_highlight'
-pause_settings_prop, current_skin_prop, use_skin_fonts_prop, custom_info_prop = 'afm.pause_settings', 'afm.current_skin', 'afm.use_skin_fonts', 'afm.custom_info_dialog'
 custom_context_main_menu_prop, custom_context_prop, sett_addoninfo_active_prop = 'afm.custom_context_main_menu', 'afm.custom_context_menu', 'afm.setting_addoninfo_active'
-myvideos_db_paths = {19: '119', 20: '121', 21: '121'}
+pause_settings_prop, use_skin_fonts_prop, custom_info_prop = 'afm.pause_settings', 'afm.use_skin_fonts', 'afm.custom_info_dialog'
+current_skin_prop, current_font_prop = 'afm.current_skin', 'afm.current_font'
+myvideos_db_paths = {19: '119', 20: '121', 21: '124'}
 sort_method_dict = {'episodes': 24, 'files': 5, 'label': 2}
 playlist_type_dict = {'music': 0, 'video': 1}
 extras_button_label_values = {'movie': {'movies_play': 32174, 'show_trailers': 32606, 'show_images': 32798,  'show_extrainfo': 32605,
@@ -115,7 +117,7 @@ def add_dir(url_params, list_name, handle, iconImage='folder', fanartImage=None,
 	url = build_url(url_params)
 	listitem = make_listitem()
 	listitem.setLabel(list_name)
-	listitem.setArt({'icon': icon, 'poster': icon, 'thumb': icon, 'fanart': fanart, 'banner': icon})
+	listitem.setArt({'icon': icon, 'poster': icon, 'thumb': icon, 'fanart': fanart, 'banner': fanart})
 	info_tag = listitem.getVideoInfoTag()
 	info_tag.setPlot(' ')
 	add_item(handle, url, listitem, isFolder)
@@ -320,6 +322,16 @@ def restart_services():
 def update_local_addons():
 	execute_builtin('UpdateLocalAddons', True)
 	sleep(2500)
+ 
+def update_kodi_addons_db(addon_name='plugin.video.afm'):
+	import time
+	import sqlite3 as database
+	try:
+		date = time.strftime('%Y-%m-%d %H:%M:%S')
+		dbcon = database.connect(translate_path('special://database/Addons33.db'), timeout=40.0)
+		dbcon.execute("INSERT OR REPLACE INTO installed (addonID, enabled, lastUpdated) VALUES (?, ?, ?)", (addon_name, 1, date))
+		dbcon.close()
+	except: pass
 
 def get_jsonrpc(request):
 	response = execute_JSON(json.dumps(request))
@@ -336,6 +348,12 @@ def jsonrpc_get_addons(_type, properties=['thumbnail', 'name']):
 	command = {'jsonrpc': '2.0', 'method': 'Addons.GetAddons','params':{'type':_type, 'properties': properties}, 'id': '1'}
 	results = get_jsonrpc(command).get('addons')
 	return results
+
+def jsonrpc_get_system_setting(setting_id, setting_value=''):
+	command = {'jsonrpc': '2.0', 'id': 1, 'method': 'Settings.GetSettingValue', 'params': {'setting': setting_id}}
+	try: result = get_jsonrpc(command)['value']
+	except: result = setting_value
+	return result
 
 def make_global_list():
 	global global_list
@@ -481,6 +499,18 @@ def toggle_language_invoker():
 	update_local_addons()
 	disable_enable_addon()
 
+def unzip(zip_location, destination_location, destination_check, show_busy=True):
+	if show_busy: show_busy_dialog()
+	try:
+		from zipfile import ZipFile
+		zipfile = ZipFile(zip_location)
+		zipfile.extractall(path=destination_location)
+		if path_exists(destination_check): status = True
+		else: status = False
+	except: status = False
+	if show_busy: hide_busy_dialog()
+	return status
+
 def upload_logfile(params):
 	log_files = [(33145, 'kodi.log'), (33146, 'kodi.old.log')]
 	list_items = [{'line1': local_string(i[0])} for i in log_files]
@@ -519,6 +549,13 @@ def open_settings(query, addon='plugin.video.afm'):
 			execute_builtin('SetFocus(%i)' % (int(function) - control))
 		except: execute_builtin('Addon.OpenSettings(%s)' % addon)
 	else: execute_builtin('Addon.OpenSettings(%s)' % addon)
+
+def external_scraper_settings():
+	try:
+		external = get_setting('afm.external_scraper.module', None)
+		if not external: return
+		execute_builtin('Addon.OpenSettings(%s)' % external)
+	except: pass
 
 def set_setting(setting_id, value):
 	addon_object.setSetting(setting_id, value)

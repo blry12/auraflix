@@ -14,13 +14,13 @@ set_sort_method, set_category, container_refresh_input, get_property = k.set_sor
 vid_str, fl_str, se_str, acc_str, dl_str, people_str, keywords_str, add_cont_str = ls(32491), ls(32493), ls(32450), ls(32494), ls(32107), ls(32507), ls(32092), ls(33140)
 tools_str, changelog_str, source_str, cl_dbs_str, langinv_str, shortcut_manager_str, ext_str = ls(32456), ls(32508), ls(32515), ls(32512), ls(33017), ls(32514), ls(32118)
 user_str, ml_str, ll_str, rec_str, cal_str, lv_str, lu_str, k_str, genre_select_str = ls(32065), ls(32454), ls(32502), ls(32503), ls(32081), ls(32509), ls(32853), ls(32538), ls(32847)
-recent_added_str, recently_aired_str, random_str, episodes_str, settings_str, res_serv_str = ls(32498), ls(32505), ls(32504), ls(32506), ls(32247), ls(32680)
+recent_added_str, recently_aired_str, random_str, episodes_str, settings_str, res_serv_str, upd_str = ls(32498), ls(32505), ls(32504), ls(32506), ls(32247), ls(32680), ls(32789)
 log_utils_str, tips_use_str, views_str, updates_str, afm_str, all_str, cache_str, clean_str = ls(32777), ls(32518), ls(32510), ls(32196), ls(32036), ls(32129), ls(32524), ls(32526)
 discover_str, history_str, help_str, furk_str, easy_str, rd_str, pm_str, ad_str = ls(32451), ls(32486), ls(32487), ls(32069), ls(32070), ls(32054), ls(32061), ls(32063)
 cloud_str, clca_str, trakt_str, imdb_str, coll_str, wlist_str, ls_str, fav_str = ls(32496), ls(32497), ls(32037), ls(32064), ls(32499), ls(32500), ls(32501), ls(32453)
 root_str, season_str, images_str, make_short_str, delete_str, mcol_str, res_hc, progman_str = ls(32457), ls(32537), ls(32798), ls(32702), ls(32703), ls(33080), ls(33107), ls(32599)
 _in_str, mov_str, tv_str, edit_str, add_menu_str, s_folder_str, mset_str, local_str = ls(32484), ls(32028), ls(32029), ls(32705), ls(32730), ls(32731), ls(33080), ls(33104)
-new_str, spot_str, tips_str, man_acc_str, rename_str = ls(32857).upper(), ls(32858).upper(), ls(32546).upper(), ls(32805), '[B]%s[/B]' % ls(32137)
+new_str, spot_str, tips_str, man_acc_str, rename_str, ext_set_open = ls(32857).upper(), ls(32858).upper(), ls(32546).upper(), ls(32805), '[B]%s[/B]' % ls(32137), ls(33015)
 changelog_utils_str, search_str = '%s & %s' % (changelog_str, log_utils_str), '%s %s' % (se_str, history_str)
 clear_all_str, clear_meta_str, clear_list_str, clear_trakt_str = clca_str % all_str, clca_str % ls(32527), clca_str % ls_str, clca_str % trakt_str
 sources_folders_str, downloads_ins, because_str = '[B]%s (%s): %s[/B]\n     [COLOR=%s][I]%s[/I][/COLOR]', _in_str % (dl_str.upper(), '%s'), '[I]%s[/I]  [B]%s[/B]' % (ls(32474), '%s')
@@ -44,6 +44,7 @@ trakt_collections_ins, trakt_watchlists_ins = _in_str % ('%s %s' % (trakt_str.up
 discover_main_ins, premium_ins, furk_ins = _in_str % (discover_str.upper(), '%s'), _in_str % (ls(32488).upper(), '%s'), _in_str % (furk_str.upper(), '%s %s')
 easynews_ins, real_debrid_ins, premiumize_ins = _in_str % (easy_str.upper(), '%s'), _in_str % (rd_str.upper(), '%s'), _in_str % (pm_str.upper(), '%s')
 trakt_lists_ins, tr_rec_ins, local_source_str = _in_str % (trakt_str.upper(), '%s'), _in_str % (rec_str.upper(), '%s'), _in_str % (local_str.upper(), source_str)
+tr_fav_ins = _in_str % (fav_str.upper(), '%s')
 favorites_ins, imdb_watchlists_ins = _in_str % (fav_str.upper(), '%s'), _in_str % (imdb_watchlist_str.upper(), '%s')
 run_plugin, container_update, log_path = 'RunPlugin(%s)', 'Container.Update(%s)', 'special://home/addons/%s/changelog.txt'
 folder_info = (('folder1', ls(32110)), ('folder2', ls(32111)), ('folder3', ls(32112)), ('folder4', ls(32113)), ('folder5', ls(32114)))
@@ -123,6 +124,7 @@ class Navigator:
 			self.add({'mode': 'navigator.trakt_watchlists'}, my_content_trakt_ins % wlist_str, 'trakt')
 			self.add({'mode': 'trakt.list.get_trakt_lists', 'list_type': 'my_lists', 'build_list': 'true', 'category_name': ml_str}, trakt_lists_ins % ml_str, 'trakt')
 			self.add({'mode': 'trakt.list.get_trakt_lists', 'list_type': 'liked_lists', 'build_list': 'true', 'category_name': ll_str}, trakt_lists_ins % ll_str, 'trakt')
+			self.add({'mode': 'navigator.trakt_favorites', 'category_name': fav_str}, trakt_lists_ins % fav_str, 'trakt')
 			self.add({'mode': 'navigator.trakt_recommendations', 'category_name': rec_str}, trakt_lists_ins % rec_str, 'trakt')
 			self.add({'mode': 'build_my_calendar'}, trakt_lists_ins % cal_str, 'trakt')
 		self.add({'mode': 'trakt.list.get_trakt_trending_popular_lists', 'list_type': 'trending', 'category_name': tu_str}, trakt_lists_ins % tu_str, 'trakt')
@@ -161,6 +163,12 @@ class Navigator:
 		self.add({'mode': 'build_tvshow_list', 'action': 'trakt_recommendations', 'new_page': 'shows', 'category_name': '%s %s' % (tv_str, rec_str)}, tr_rec_ins % tv_str, 'trakt')
 		self.end_directory()
 
+	def trakt_favorites(self):
+		self.category_name = 'Favorites'
+		self.add({'mode': 'build_movie_list', 'action': 'trakt_favorites', 'category_name': '%s %s' % (mov_str, fav_str)}, tr_fav_ins % mov_str, 'trakt')
+		self.add({'mode': 'build_tvshow_list', 'action': 'trakt_favorites', 'category_name': '%s %s' % (tv_str, fav_str)}, tr_fav_ins % tv_str, 'trakt')
+		self.end_directory()
+
 	def imdb_watchlists(self):
 		self.category_name = imdb_watchlist_str
 		self.add({'mode': 'build_movie_list', 'action': 'imdb_watchlist', 'category_name': '%s %s' % (imdb_watchlist_str, mov_str)}, imdb_watchlists_ins % mov_str, 'imdb')
@@ -191,6 +199,8 @@ class Navigator:
 
 	def tools(self):
 		self.add({'mode': 'open_settings', 'isFolder': 'false'}, settings_ins % afm_str, 'settings')
+		if get_setting('afm.external_scraper.module', None):
+			self.add({'mode': 'open_external_scraper_settings', 'isFolder': 'false'}, settings_ins % ext_set_open, 'settings')
 		self.add({'mode': 'navigator.tips'}, tools_ins % tips_use_str, 'settings2')
 		self.add({'mode': 'navigator.accounts_manager'}, tools_ins % man_acc_str, 'settings2')
 		self.add({'mode': 'build_next_episode_manager'}, tools_ins % progman_str, 'settings2')
@@ -200,6 +210,7 @@ class Navigator:
 		self.add({'mode': 'navigator.maintenance'}, tools_ins % cl_dbs_str, 'settings2')
 		self.add({'mode': 'default_highlight_colors_choice', 'isFolder': 'false'}, tools_ins % res_hc, 'settings2')
 		self.add({'mode': 'restart_services', 'isFolder': 'false'}, tools_ins % res_serv_str, 'settings')
+		self.add({'mode': 'update_check', 'isFolder': 'false'}, tools_ins % upd_str, 'settings2')
 		self.add({'mode': 'toggle_language_invoker', 'isFolder': 'false'}, tools_ins % langinv_str, 'settings2')
 		self.end_directory()
 
@@ -322,7 +333,7 @@ class Navigator:
 					listitem.setLabel(display)
 					listitem.setArt({'fanart': fanart})
 					info_tag = listitem.getVideoInfoTag()
-					info_tag.setMediaType('video')
+					# info_tag.setMediaType('video')
 					info_tag.setPlot(' ')
 					listitem.setProperty('afm.context_main_menu_params', build_url({'mode': 'menu_editor.edit_menu_external', 'name': clean_title, 'iconImage': folder_icon,
 										'service': 'FOLDERS', 'id': link_id}))
@@ -376,7 +387,7 @@ class Navigator:
 			listitem.setLabel('[I]%s...[/I]' % make_short_str)
 			listitem.setArt({'icon': new_icon, 'poster': new_icon, 'thumb': new_icon, 'fanart': fanart, 'banner': new_icon})
 			info_tag = listitem.getVideoInfoTag()
-			info_tag.setMediaType('video')
+			# info_tag.setMediaType('video')
 			info_tag.setPlot(' ')
 			add_item(int(sys.argv[1]), url, listitem, False)
 		def _builder():
@@ -392,7 +403,7 @@ class Navigator:
 					listitem.setLabel(name)
 					listitem.setArt({'icon': folder_icon, 'poster': folder_icon, 'thumb': folder_icon, 'fanart': fanart, 'banner': folder_icon})
 					info_tag = listitem.getVideoInfoTag()
-					info_tag.setMediaType('video')
+					# info_tag.setMediaType('video')
 					info_tag.setPlot(' ')
 					listitem.setProperty('afm.context_main_menu_params', build_url({'mode': 'menu_editor.edit_menu_external', 'name': name, 'iconImage': folder_icon}))
 					if self.is_home: listitem.setProperty('afm.external', 'true')
@@ -410,7 +421,7 @@ class Navigator:
 			listitem.setLabel('[I]%s...[/I]' % add_cont_str)
 			listitem.setArt({'icon': new_icon, 'poster': new_icon, 'thumb': new_icon, 'fanart': fanart, 'banner': new_icon})
 			info_tag = listitem.getVideoInfoTag()
-			info_tag.setMediaType('video')
+			# info_tag.setMediaType('video')
 			info_tag.setPlot(' ')
 			add_item(int(sys.argv[1]), url, listitem, False)
 		def _process():
@@ -428,7 +439,7 @@ class Navigator:
 					listitem.setLabel(name)
 					listitem.setArt({'icon': icon, 'poster': icon, 'thumb': icon, 'fanart': fanart, 'banner': icon})
 					info_tag = listitem.getVideoInfoTag()
-					info_tag.setMediaType('video')
+					# info_tag.setMediaType('video')
 					info_tag.setPlot(' ')
 					listitem.addContextMenuItems(cm)
 					listitem.setProperty('afm.context_main_menu_params', menu_editor_url)
@@ -490,7 +501,7 @@ class Navigator:
 				listitem.setLabel(ls(item_get('name', '')))
 				listitem.setArt({'icon': icon, 'poster': icon, 'thumb': icon, 'fanart': fanart, 'banner': icon, 'landscape': icon})
 				info_tag = listitem.getVideoInfoTag()
-				info_tag.setMediaType('video')
+				# info_tag.setMediaType('video')
 				info_tag.setPlot(' ')
 				listitem.addContextMenuItems(cm)
 				listitem.setProperty('afm.context_main_menu_params', menu_editor_url)
@@ -508,7 +519,7 @@ class Navigator:
 		listitem.setLabel(list_name)
 		listitem.setArt({'icon': icon, 'poster': icon, 'thumb': icon, 'fanart': fanart, 'banner': icon, 'landscape': icon})
 		info_tag = listitem.getVideoInfoTag()
-		info_tag.setMediaType('video')
+		# info_tag.setMediaType('video')
 		info_tag.setPlot(' ')
 		if contextmenu_edit:
 			cm = []
