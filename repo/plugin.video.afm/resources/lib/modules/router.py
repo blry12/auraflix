@@ -3,8 +3,8 @@ from modules.kodi_utils import external, parse_qsl, get_setting
 # from modules.kodi_utils import logger
 
 def sys_exit_check():
-	if get_property(current_langinvoker_prop) == 'true' and external(): return True
-	return restart_for_settings()
+	if get_setting('afm.reuse_language_invoker') == 'true' and external(): return True
+	return False
 
 def routing(sys):
 	params = dict(parse_qsl(sys.argv[2][1:], keep_blank_values=True))
