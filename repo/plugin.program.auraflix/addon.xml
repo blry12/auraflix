@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.program.auraflix" name="[COLOR red]AURAFlix[/COLOR] Wizard" version="1.2" provider-name="BLRY">
+<addon id="plugin.program.auraflix" name="[COLOR red]AURAFlix[/COLOR] Wizard" version="1.3" provider-name="BLRY">
 	<requires>
 		<import addon="xbmc.python" version="3.0.1"/>
 		<import addon="script.module.accountmgr" version="1.0"/>
 		<import addon="script.module.acctview" version="1.0"/>
 		<import addon="script.module.requests" version="1.0"/>
+		<import addon="plugin.video.afm" version="1.0"/>
 	</requires>
 	<extension point="xbmc.python.pluginsource" library="addon.py">
 		<provides>executable</provides>
@@ -22,8 +23,9 @@
 		<email></email>
 		<source></source>
 		<news>
-1.2 - Updated repo 1.1 account manager 2.4.6 account view 2.3.1
-1.1 - Updated repo 1.1 account manager 2.4.2 account view 2.2.8
+1.3 - added AURAFLixMedia video addon - FEN fork
+1.2 - Updated account manager 2.4.6 account view 2.3.1
+1.1 - Updated account manager 2.4.2 account view 2.2.8
 1.0 - Initial Release
 		</news>
 		<assets>

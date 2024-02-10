@@ -4,7 +4,7 @@
 		<!-- General -->
 		<category id="general" label="32001" help="">
 			<!-- Manage Updates -->
-			<group id="1" label="33185">
+			<group id="3" label="33185">
 				<setting id="update.action" type="integer" label="33188" help="">
 					<level>0</level>
 					<default>0</default>
