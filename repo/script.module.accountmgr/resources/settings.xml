@@ -4,7 +4,7 @@
 		<setting type="lsep" label="Real-Debrid" />
 		<setting id="realdebrid.token" label="40079" type="text" default="" visible="false" />
 		<setting id="realdebrid.username" label="32318" type="text" default="" visible="!eq(-1,)" enable="false" />
-		<setting id="realdebrid.expiry.notice" type="bool" label="40086" default="true" visible="!eq(-2,)" />
+		<setting id="realdebrid.expiry.notice" type="bool" label="40086" default="false" visible="!eq(-2,)" />
 		<setting type="action" label="32316" option="close" action="RunScript(script.module.accountmgr, action=realdebridAcct)" visible="!eq(-2,)" />
 		<setting type="action" label="32319" option="close" action="RunScript(script.module.accountmgr, action=realdebridAuth)" visible="eq(-4,)" />
 		<setting id="realdebrid.client_id" label="realdebrid client_id" type="text" default="" visible="false" />
@@ -14,14 +14,14 @@
 		<setting type="lsep" label="Premiumize" />
 		<setting id="premiumize.token" label="40078" type="text" default="" visible="false" />
 		<setting id="premiumize.username" label="32318" type="text" default="" visible="!eq(-1,)" enable="false" />
-		<setting id="premiumize.expiry.notice" type="bool" label="40086" default="true" visible="!eq(-2,)" />
+		<setting id="premiumize.expiry.notice" type="bool" label="40086" default="false" visible="!eq(-2,)" />
 		<setting type="action" label="32316" option="close" action="RunScript(script.module.accountmgr, action=premiumizeAcct)" visible="!eq(-2,)" />
 		<setting type="action" label="32319" option="close" action="RunScript(script.module.accountmgr, action=premiumizeAuth)" visible="eq(-4,)" />
 
 		<setting type="lsep" label="All-Debrid" />
 		<setting id="alldebrid.token" label="40077" type="text" default="" visible="false" />
 		<setting id="alldebrid.username" label="32318" type="text" default="" visible="!eq(-1,)" enable="false" />
-		<setting id="alldebrid.expiry.notice" type="bool" label="40086" default="true" visible="!eq(-2,)" />
+		<setting id="alldebrid.expiry.notice" type="bool" label="40086" default="false" visible="!eq(-2,)" />
 		<setting type="action" label="32316" option="close" action="RunScript(script.module.accountmgr, action=alldebridAcct)" visible="!eq(-2,)" />
 		<setting type="action" label="32319" option="close" action="RunScript(script.module.accountmgr, action=alldebridAuth)" visible="eq(-4,)" />
 
