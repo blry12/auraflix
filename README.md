@@ -14,7 +14,7 @@
 <ul>
     <li>Open the Kodi File Manager</li>
     <li>Select "Add source"</li>
-    <li>The path for the source is <code>https://blry12.github.io/auraflix</code> (Give it the name "709REPO")</li>
+    <li>The path for the source is <code>https://blry12.github.io/auraflix</code></li>
 </ul>  
 
 
