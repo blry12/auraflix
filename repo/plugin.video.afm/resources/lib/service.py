@@ -2,11 +2,11 @@
 from modules import service_functions
 from modules.kodi_utils import Thread, xbmc_monitor, logger, local_string as ls
 
-afm_str = ls(32036).upper()
+fen_str = ls(32036).upper()
 on_notification_actions = service_functions.OnNotificationActions()
 on_settings_changed_actions = service_functions.OnSettingsChangedActions()
 
-class afmMonitor(xbmc_monitor):
+class FenMonitor(xbmc_monitor):
 	def __init__ (self):
 		xbmc_monitor.__init__(self)
 		self.startUpServices()
@@ -37,8 +37,8 @@ class afmMonitor(xbmc_monitor):
 	def onNotification(self, sender, method, data):
 		on_notification_actions.run(sender, method, data)
 
-logger(afm_str, 'Main Monitor Service Starting')
-logger(afm_str, 'Settings Monitor Service Starting')
-afmMonitor().waitForAbort()
-logger(afm_str, 'Settings Monitor Service Finished')
-logger(afm_str, 'Main Monitor Service Finished')
+logger(fen_str, 'Main Monitor Service Starting')
+logger(fen_str, 'Settings Monitor Service Starting')
+FenMonitor().waitForAbort()
+logger(fen_str, 'Settings Monitor Service Finished')
+logger(fen_str, 'Main Monitor Service Finished')

@@ -20,7 +20,7 @@ metadata_user_info, quality_filter, sort_to_top, monitor_playback = settings.met
 scraping_settings, include_prerelease_results, auto_rescrape_with_all = settings.scraping_settings, settings.include_prerelease_results, settings.auto_rescrape_with_all
 playback_attempt_pause, get_art_provider, external_scraper_info = settings.playback_attempt_pause, settings.get_art_provider, settings.external_scraper_info
 ignore_results_filter, results_sort_order, easynews_max_retries = settings.ignore_results_filter, settings.results_sort_order, settings.easynews_max_retries
-autoplay_next_episode, autoscrape_next_episode, limit_resolve = settings.autoplay_next_episode, settings.autoscrape_next_episode, settings.limit_resolve
+autoplay_next_episode, limit_resolve = settings.autoplay_next_episode, settings.limit_resolve
 erase_bookmark, clear_local_bookmarks = watched_status.erase_bookmark, watched_status.clear_local_bookmarks
 get_progress_percent, get_bookmarks = watched_status.get_progress_percent, watched_status.get_bookmarks
 internal_include_list = ['easynews', 'furk', 'pm_cloud', 'rd_cloud', 'ad_cloud']
@@ -60,11 +60,10 @@ class Sources():
 		self.play_type, self.background, self.prescrape = params_get('play_type', ''), params_get('background', 'false') == 'true', params_get('prescrape', self.prescrape) == 'true'
 		self.random, self.random_continual = params_get('random', 'false') == 'true', params_get('random_continual', 'false') == 'true'
 		if self.play_type:
-			if self.play_type == 'autoplay_nextep': self.autoplay_nextep, self.autoscrape_nextep = True, False
-			elif self.play_type == 'random_continual': self.autoplay_nextep, self.autoscrape_nextep = False, False
-			else: self.autoplay_nextep, self.autoscrape_nextep = False, True
-		else: self.autoplay_nextep, self.autoscrape_nextep = autoplay_next_episode(), autoscrape_next_episode()
-		self.autoscrape = self.autoscrape_nextep and self.background
+			if self.play_type == 'autoplay_nextep': self.autoplay_nextep = True
+			elif self.play_type == 'random_continual': self.autoplay_nextep = False
+			else: self.autoplay_nextep = False
+		else: self.autoplay_nextep = autoplay_next_episode()
 		self.auto_rescrape_with_all = auto_rescrape_with_all()
 		self.nextep_settings, self.disable_autoplay_next_episode = params_get('nextep_settings', {}), params_get('disable_autoplay_next_episode', 'false') == 'true'
 		self.ignore_scrape_filters = params_get('ignore_scrape_filters', 'false') == 'true'
@@ -97,8 +96,7 @@ class Sources():
 		self.include_3D_results = get_setting('afm.include_3d_results', 'true') == 'true'
 		self._update_meta()
 		self._search_info()
-		if self.autoscrape: self.autoscrape_nextep_handler()
-		else: return self.get_sources()
+		return self.get_sources()
 
 	def get_sources(self):
 		if not self.progress_dialog and not self.background: self._make_progress_dialog()
@@ -118,8 +116,7 @@ class Sources():
 			if not self.orig_results and not self.active_external: self._kill_progress_dialog()
 			results = self.process_results(self.orig_results)
 		if not results: return self._process_post_results()
-		if self.autoscrape: return results
-		else: return self.play_source(results)
+		return self.play_source(results)
 
 	def collect_results(self):
 		self.sources.extend(self.prescrape_sources)
@@ -519,9 +516,8 @@ class Sources():
 		self.progress_dialog.enable_resume(percent)
 		return self.progress_dialog.resume_choice
 
-	def _make_nextep_dialog(self, default_action='cancel', play_type='autoplay_nextep', focus_button=10):
-		try: action = open_window(('windows.next_episode', 'NextEpisode'), 'next_episode.xml',
-			meta=self.meta, default_action=default_action, play_type=play_type, focus_button=focus_button)
+	def _make_nextep_dialog(self, default_action='cancel'):
+		try: action = open_window(('windows.next_episode', 'NextEpisode'), 'next_episode.xml', meta=self.meta, default_action=default_action)
 		except: action = 'cancel'
 		return action
 
@@ -684,7 +680,7 @@ class Sources():
 
 	def continue_resolve_check(self):
 		try:
-			if not self.background or self.autoscrape_nextep: return True
+			if not self.background: return True
 			if self.autoplay_nextep: return self.autoplay_nextep_handler()
 			return self.random_continual_handler()
 		except: return False
@@ -730,22 +726,6 @@ class Sources():
 					return True
 			else: return False
 		else: return False
-
-	def autoscrape_nextep_handler(self):
-		default_action = 'cancel'
-		player = xbmc_player()
-		if player.isPlayingVideo():
-			action = self._make_nextep_dialog(play_type=self.play_type, focus_button=12)
-			if action == 'cancel': return
-			else:
-				results = self.get_sources()
-				if not results: return notification(33092, 3000)
-				if action == 'play': player.stop()
-				else:
-					notification(33091, 3000)
-					while player.isPlayingVideo(): sleep(100)
-				self.display_results(results)
-		else: return
 
 	def debrid_importer(self, debrid_provider):
 		return manual_function_import(*debrids[debrid_provider])

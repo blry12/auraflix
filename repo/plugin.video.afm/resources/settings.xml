@@ -4,7 +4,7 @@
 		<!-- General -->
 		<category id="general" label="32001" help="">
 			<!-- Manage Updates -->
-			<group id="3" label="33185">
+			<group id="1" label="33185">
 				<setting id="update.action" type="integer" label="33188" help="">
 					<level>0</level>
 					<default>0</default>
@@ -33,7 +33,7 @@
 			</group>
 			<!-- General -->
 			<group id="2" label="32001">
-				<setting id="auto_start_afm" type="boolean" label="32017" help="">
+				<setting id="auto_start_fen" type="boolean" label="32017" help="">
 					<level>0</level>
 					<default>false</default>
 					<control type="toggle"/>
@@ -2552,49 +2552,6 @@
 					</dependencies>
 					<control type="toggle"/>
 				</setting>
-				<setting id="autoscrape_next_episode" type="boolean" label="33086" help="">
-					<level>0</level>
-					<default>false</default>
-					<dependencies>
-						<dependency type="visible">
-							<condition operator="is" setting="auto_play_episode">false</condition>
-						</dependency>
-					</dependencies>
-					<control type="toggle"/>
-				</setting>
-				<setting id="autoscrape_next_window_percentage" type="integer" label="32005" help="" parent="autoscrape_next_episode">
-					<level>0</level>
-					<default>95</default>
-					<constraints>
-						<minimum>75</minimum>
-						<step>1</step>
-						<maximum>99</maximum>
-					</constraints>
-					<dependencies>
-						<dependency type="visible">
-							<and>
-								<condition operator="!is" setting="auto_play_episode">true</condition>
-								<condition operator="is" setting="autoscrape_next_episode">true</condition>
-							</and>
-						</dependency>
-					</dependencies>
-					<control type="slider" format="integer">
-						<popup>false</popup>
-					</control>
-				</setting>
-				<setting id="autoscrape_use_chapters" type="boolean" label="33151" help="" parent="autoscrape_next_episode">
-					<level>0</level>
-					<default>true</default>
-					<dependencies>
-						<dependency type="visible">
-							<and>
-								<condition operator="!is" setting="auto_play_episode">true</condition>
-								<condition operator="is" setting="autoscrape_next_episode">true</condition>
-							</and>
-						</dependency>
-					</dependencies>
-					<control type="toggle"/>
-				</setting>
 				<setting id="auto_resume_episode" type="integer" label="32181" help="">
 					<level>0</level>
 					<default>0</default>
@@ -2764,7 +2721,7 @@
 		<category id="hidden" label="32513" help="">
 			<!-- Misc -->
 			<group id="1" label="32513">
-				<setting id="tools.make_afm_work" type="boolean" label="33144" help="">
+				<setting id="tools.make_fen_work" type="boolean" label="33144" help="">
 					<level>0</level>
 					<default>false</default>
 					<control type="toggle"/>

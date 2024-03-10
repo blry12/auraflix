@@ -37,7 +37,7 @@ imdb_parentsguide, imdb_videos = imdb_api.imdb_parentsguide, imdb_api.imdb_video
 fetch_ratings_info, trakt_comments = omdb_api.fetch_ratings_info, trakt_api.trakt_comments
 tmdb_image_base, count_insert = 'https://image.tmdb.org/t/p/%s%s', 'x%s'
 youtube_check = 'plugin.video.youtube'
-setting_base, label_base, ratings_icon_base = 'afm.extras.%s.button', 'button%s.label', 'afm_flags/ratings/%s'
+setting_base, label_base, ratings_icon_base = 'afm.extras.%s.button', 'button%s.label', 'fen_flags/ratings/%s'
 separator = '[COLOR %s][B]  •  [/B][/COLOR]'
 custom_highlight_var_dict = {'skin.arctic.horizon.2': '$VAR[ColorHighlight]]'}
 button_ids = (10, 11, 12, 13, 14, 15, 16, 17, 50)
@@ -606,7 +606,8 @@ class Extras(BaseDialog):
 
 	def play_nextep(self):
 		if self.nextep_season == None: return ok_dialog(text=33116)
-		url_params = {'mode': 'playback.media', 'media_type': 'episode', 'tmdb_id': self.tmdb_id, 'season': self.nextep_season, 'episode': self.nextep_episode}
+		url_params = {'mode': 'playback.media', 'media_type': 'episode', 'tmdb_id': self.tmdb_id, 'season': self.nextep_season,
+					'episode': self.nextep_episode}
 		Sources().playback_prep(url_params)
 
 	def play_random_episode(self):
