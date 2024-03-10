@@ -2,7 +2,10 @@
 
 
 
-[COLOR red][B]Version 3.2.29 [/B][/COLOR]
+[COLOR red][B]Version 3.2.29/1.1.2 [/B][/COLOR]
+- Fixed Trakt API
+
+[COLOR red][B]Version 3.2.29/1.1.1 [/B][/COLOR]
 - Added Kodi version check to startup services.
 - Fix incorrect episode size estimates on certain results.
 
