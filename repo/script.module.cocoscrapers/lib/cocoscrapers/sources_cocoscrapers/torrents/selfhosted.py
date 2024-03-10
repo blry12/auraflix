@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# created by Venom for Fenomscrapers (updated 7-19-2022)
+# created by Venom for Fenomscrapers (2-10-2024)
 '''
 	Fenomscrapers Project
 '''
@@ -8,6 +8,8 @@ from json import loads as jsloads
 import re
 from cocoscrapers.modules import client
 from cocoscrapers.modules import source_utils
+from cocoscrapers.modules import control
+from cocoscrapers.modules import log_utils
 
 class source:
 	priority = 1
@@ -16,17 +18,21 @@ class source:
 	hasEpisodes = True
 	def __init__(self):
 		self.language = ['en']
-		self.base_link = "https://torrentio.strem.fun"
-		#self.movieSearch_link = '/providers=yts,eztv,rarbg,1337x,thepiratebay,kickasstorrents,torrentgalaxy|language=english/stream/movie/%s.json' #found this to be broken 12-9-22 umbrelladev
-		#self.tvSearch_link = '/providers=yts,eztv,rarbg,1337x,thepiratebay,kickasstorrents,torrentgalaxy|language=english/stream/series/%s:%s:%s.json' #found this to be broken 12-9-22 umbrelladev
-		self.movieSearch_link = '/providers=yts,eztv,rarbg,1337x,thepiratebay,kickasstorrents,torrentgalaxy/stream/movie/%s.json'
-		self.tvSearch_link = '/providers=yts,eztv,rarbg,1337x,thepiratebay,kickasstorrents,torrentgalaxy/stream/series/%s:%s:%s.json'
+		self.base_link = control.setting('selfhosted.url','')
+		self.scraper_name = control.setting('selfhosted.name','SELFHOSTED')
+		# self.movieSearch_link = '/providers=yts,eztv,rarbg,1337x,thepiratebay,kickasstorrents,torrentgalaxy|language=english/stream/movie/%s.json' # english is now default 12-09-2022
+		# self.tvSearch_link = '/providers=yts,eztv,rarbg,1337x,thepiratebay,kickasstorrents,torrentgalaxy|language=english/stream/series/%s:%s:%s.json' # english is now default 12-09-2022
+		# self.movieSearch_link = '/providers=yts,eztv,rarbg,1337x,thepiratebay,kickasstorrents,torrentgalaxy/stream/movie/%s.json'
+		# self.tvSearch_link = '/providers=yts,eztv,rarbg,1337x,thepiratebay,kickasstorrents,torrentgalaxy/stream/series/%s:%s:%s.json'
+		self.movieSearch_link = '/stream/movie/%s.json'
+		self.tvSearch_link = '/stream/series/%s:%s:%s.json'
 		self.min_seeders = 0
-# Currently supports YTS(+), EZTV(+), RARBG(+), 1337x(+), ThePirateBay(+), KickassTorrents(+), TorrentGalaxy(+), HorribleSubs(+), NyaaSi(+), NyaaPantsu(+), Rutor(+), Comando(+), ComoEuBaixo(+), Lapumia(+), OndeBaixa(+), Torrent9(+).
 
 	def sources(self, data, hostDict):
 		sources = []
 		if not data: return sources
+		if self.base_link == '':
+			return sources
 		sources_append = sources.append
 		try:
 			aliases = data['aliases']
@@ -46,14 +52,17 @@ class source:
 				hdlr = year
 				years = [str(int(year)-1), str(year), str(int(year)+1)]
 				url = '%s%s' % (self.base_link, self.movieSearch_link % imdb)
+			log_utils.log('url = %s' % url)
 			results = client.request(url, timeout=5)
 			try: files = jsloads(results)['streams']
 			except: return sources
-			_INFO = re.compile(r'👤.*')
+			# _INFO = re.compile(r'👤.*')
+			_INFO = re.compile(r'💾.*')
+
 			undesirables = source_utils.get_undesirables()
 			check_foreign_audio = source_utils.check_foreign_audio()
 		except:
-			source_utils.scraper_error('TORRENTIO')
+			source_utils.scraper_error(self.scraper_name)
 			return sources
 
 		for file in files:
@@ -82,10 +91,10 @@ class source:
 				except: dsize = 0
 				info = ' | '.join(info)
 
-				sources_append({'provider': 'torrentio', 'source': 'torrent', 'seeders': seeders, 'hash': hash, 'name': name, 'name_info': name_info,
+				sources_append({'provider': self.scraper_name, 'source': 'torrent', 'seeders': seeders, 'hash': hash, 'name': name, 'name_info': name_info,
 											'quality': quality, 'language': 'en', 'url': url, 'info': info, 'direct': False, 'debridonly': True, 'size': dsize})
 			except:
-				source_utils.scraper_error('TORRENTIO')
+				source_utils.scraper_error(self.scraper_name)
 		return sources
 
 	def sources_packs(self, data, hostDict, search_series=False, total_seasons=None, bypass_filter=False):
@@ -102,11 +111,12 @@ class source:
 			results = client.request(url, timeout=5)
 			try: files = jsloads(results)['streams']
 			except: return sources
-			_INFO = re.compile(r'👤.*')
+			# _INFO = re.compile(r'👤.*')
+			_INFO = re.compile(r'💾.*')
 			undesirables = source_utils.get_undesirables()
 			check_foreign_audio = source_utils.check_foreign_audio()
 		except:
-			source_utils.scraper_error('TORRENTIO')
+			source_utils.scraper_error(self.scraper_name)
 			return sources
 
 		for file in files:
@@ -148,11 +158,11 @@ class source:
 				except: dsize = 0
 				info = ' | '.join(info)
 
-				item = {'provider': 'torrentio', 'source': 'torrent', 'seeders': seeders, 'hash': hash, 'name': name, 'name_info': name_info, 'quality': quality,
+				item = {'provider': self.scraper_name, 'source': 'torrent', 'seeders': seeders, 'hash': hash, 'name': name, 'name_info': name_info, 'quality': quality,
 							'language': 'en', 'url': url, 'info': info, 'direct': False, 'debridonly': True, 'size': dsize, 'package': package}
 				if search_series: item.update({'last_season': last_season})
 				elif episode_start: item.update({'episode_start': episode_start, 'episode_end': episode_end}) # for partial season packs
 				sources_append(item)
 			except:
-				source_utils.scraper_error('TORRENTIO')
+				source_utils.scraper_error(self.scraper_name)
 		return sources
