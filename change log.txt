@@ -1,0 +1,9 @@
+1.2 - Updates
+		- AURAFlixMedia 1.1.1 (FEN 3.2.29)
+		- COCOScrapers 1.0.19
+		- Account Manager 2.4.9
+		- Script Module 2.3.2
+	- Added
+		- Maxql ..added AFM addon..
+1.1 - Updates made
+1.0 - Initial Release
