@@ -1,4 +1,4 @@
-# AURAFlix Builds Nexus
+# AURAFlix Builds
 
 
 ### Instructions for installing this repository without a source:
@@ -14,7 +14,9 @@
 <ul>
     <li>Open the Kodi File Manager</li>
     <li>Select "Add source"</li>
-    <li>The path for the source is <code>https://blry12.github.io/auraflix-n</code></li>
+    <li>The path for the source is <code>https://blry12.github.io/auraflix</code></li>
+    <li>For Kodi 21.x - choose Omega Wizard</li>
+    <li>For Kodi 20.x - choose Nexus Wizard</li>
 </ul>  
 
 
