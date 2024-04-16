@@ -1,0 +1,25 @@
+<builds>  
+
+  <build>
+	<name>[COLOR red]AURAFlix Build[/COLOR] [COLOR plum]UHD/Dolby Vision Edition[/COLOR] -</name>
+	<version>1.0</version>
+	<url>https://archive.org/download/auraflix-1.0_20240210_0630/AURAFlix_1.0.zip</url>
+	<icon>https://auraflixrepo.000webhostapp.com/auraflix/icon.png</icon>
+	<fanart>https://auraflixrepo.000webhostapp.com/auraflix/fanart.jpg</fanart>
+	<description>AURAFlix Initial Release !!!MUST USE Paid Debrid Service and Trakt Recommended. 
+	UHD and Dolby Vision Enabled Edition for higher end devices to get the most out of you Device. 
+	AURAFlix does not contain or host any media files</description>
+  </build>
+  
+    <build>
+	<name>[COLOR red]AURAFlix Build[/COLOR] [COLOR gold]1080p/SD Edition[/COLOR] -</name>
+	<version>1.0</version>
+	<url>https://archive.org/download/auraflix-1.0-hdonly/AURAFlix_1.0_HDOnly.zip</url>
+	<icon>https://auraflixrepo.000webhostapp.com/auraflix/icon.png</icon>
+	<fanart>https://auraflixrepo.000webhostapp.com/auraflix/fanart.jpg</fanart>
+	<description>AURAFlix Initial Release !!!MUST USE Paid Debrid Service and Trakt Recommended. 
+	1080p and Standard Def Edition is best for those who do not have devices with 4K Content combatability. 
+	AURAFlix does not contain or host any media files</description>
+  </build>
+ 
+</builds>
