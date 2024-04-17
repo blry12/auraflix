@@ -1,9 +1,0 @@
-1
-|||
-[B][COLOR red]AURAFlix Wizard[/COLOR][/B] 
-[B]1.0.0[/B]
-Initial Release of AURAFlix! A Premium Addon for Kodi 20 NEXUS
-A Netflix style and lightweight build.
-Premium services like Debrid required. 
-Trakt is a great addition to manage and continue watching your content.
-Dolby Vision Compatible w/Maven's Kodi Build for Android
