@@ -55,6 +55,36 @@ class Auth:
                         xbmc.log('%s: Seren Metadata Failed!' % var.amgr, xbmc.LOGINFO)
                         pass
                 
+
+        #afm
+                try:
+                        if xbmcvfs.exists(var.chk_afm) and xbmcvfs.exists(var.chkset_afm):
+
+                                chk_fanart_api = xbmcaddon.Addon('plugin.video.afm').getSetting("fanart_client_key")
+                                chk_omdb_api = xbmcaddon.Addon('plugin.video.afm').getSetting("omdb_api")
+                                chk_imdb_api = xbmcaddon.Addon('plugin.video.afm').getSetting("imdb_user")    
+                                chk_tmdb_api = xbmcaddon.Addon('plugin.video.afm').getSetting("tmdb_api")
+                                
+                                if not str(var.chk_accountmgr_fanart) == str(chk_fanart_api) or str(chk_fanart_api) == '':
+                                        addon = xbmcaddon.Addon("plugin.video.afm")
+                                        addon.setSetting("fanart_client_key", your_fanart_api)
+
+                                if not str(var.chk_accountmgr_omdb) == str(chk_omdb_api) or str(chk_omdb_api) == '':
+                                        addon = xbmcaddon.Addon("plugin.video.afm")
+                                        addon.setSetting("omdb_api", your_omdb_api)
+
+                                if not str(var.chk_accountmgr_imdb) == str(chk_imdb_api) or str(chk_imdb_api) == '':
+                                        addon = xbmcaddon.Addon("plugin.video.afm")
+                                        addon.setSetting("imdb_user", your_imdb_api)
+                                        
+                                if not str(var.chk_accountmgr_tmdb) == str(chk_tmdb_api) or str(chk_tmdb_api) == '':
+                                        addon = xbmcaddon.Addon("plugin.video.afm")
+                                        addon.setSetting("tmdb_api", your_tmdb_api)
+                except:
+                        xbmc.log('%s: afm Metadata Failed!' % var.amgr, xbmc.LOGINFO)
+                        pass
+
+
         #Fen
                 try:
                         if xbmcvfs.exists(var.chk_fen) and xbmcvfs.exists(var.chkset_fen):
@@ -256,6 +286,49 @@ class Auth:
                         xbmc.log('%s: Umbrella Metadata Failed!' % var.amgr, xbmc.LOGINFO)
                         pass
 
+        #OneMoar
+                try:
+                        if xbmcvfs.exists(var.chk_onem) and xbmcvfs.exists(var.chkset_onem):
+
+                                chk_fanart_api = xbmcaddon.Addon('plugin.video.onemoar').getSetting("fanart_tv.api_key")
+                                chk_mdb_api = xbmcaddon.Addon('plugin.video.onemoar').getSetting("mdblist.api")
+                                chk_imdb_api = xbmcaddon.Addon('plugin.video.onemoar').getSetting("imdbuser")    
+                                chk_tmdb_api = xbmcaddon.Addon('plugin.video.onemoar').getSetting("tmdb.apikey")
+                                chk_tmdb_user = xbmcaddon.Addon('plugin.video.onemoar').getSetting("tmdbusername")
+                                chk_tmdb_pass = xbmcaddon.Addon('plugin.video.onemoar').getSetting("tmdbpassword")
+                                chk_tmdb_session = xbmcaddon.Addon('plugin.video.onemoar').getSetting("tmdb.sessionid")
+                                
+                                if not str(var.chk_accountmgr_fanart) == str(chk_fanart_api) or str(chk_fanart_api) == '':
+                                        addon = xbmcaddon.Addon("plugin.video.onemoar")
+                                        addon.setSetting("fanart_tv.api_key", your_fanart_api)
+
+                                if not str(var.chk_accountmgr_mdb) == str(chk_mdb_api) or str(chk_mdb_api) == '':
+                                        addon = xbmcaddon.Addon("plugin.video.onemoar")
+                                        addon.setSetting("mdblist.api", your_mdb_api)
+
+                                if not str(var.chk_accountmgr_imdb) == str(chk_imdb_api) or str(chk_imdb_api) == '':
+                                        addon = xbmcaddon.Addon("plugin.video.onemoar")
+                                        addon.setSetting("imdbuser", your_imdb_api)
+                                        
+                                if not str(var.chk_accountmgr_tmdb) == str(chk_tmdb_api) or str(chk_tmdb_api) == '':
+                                        addon = xbmcaddon.Addon("plugin.video.onemoar")
+                                        addon.setSetting("tmdb.apikey", your_tmdb_api)
+
+                                if not str(var.chk_accountmgr_tmdb_user) == str(chk_tmdb_user) or str(chk_tmdb_user) == '':
+                                        addon = xbmcaddon.Addon("plugin.video.onemoar")
+                                        addon.setSetting("tmdbusername", your_tmdb_user)
+
+                                if not str(var.chk_accountmgr_tmdb_pass) == str(chk_tmdb_pass) or str(chk_tmdb_pass) == '':
+                                        addon = xbmcaddon.Addon("plugin.video.onemoar")
+                                        addon.setSetting("tmdbpassword", your_tmdb_pass)
+
+                                if not str(var.chk_accountmgr_tmdb_session) == str(chk_tmdb_session) or str(chk_tmdb_session) == '':
+                                        addon = xbmcaddon.Addon("plugin.video.onemoar")
+                                        addon.setSetting("tmdb.sessionid", your_tmdb_session)
+                except:
+                        xbmc.log('%s: OneMoar Metadata Failed!' % var.amgr, xbmc.LOGINFO)
+                        pass
+                
         #Dradis
                 try:
                         if xbmcvfs.exists(var.chk_dradis) and xbmcvfs.exists(var.chkset_dradis):

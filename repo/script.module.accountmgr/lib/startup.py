@@ -178,7 +178,24 @@ def check_api():
                         except:
                                 xbmc.log('%s: Seren API Failed!' % var.amgr, xbmc.LOGINFO)
                                 pass
+                                
+                if var.setting('api.service')=='true' and xbmcvfs.exists(var.chk_afm) and xbmcvfs.exists(var.chkset_afm) and str(var.chk_accountmgr_tk) != '':
+                        try:
+                                with open(var.path_afm) as f:
+                                        if var.chk_api in f.read():
+                                                pass
+                                        else:   
+                                                with open(var.path_afm,'r') as f:
+                                                    data = f.read()
 
+                                                client = data.replace(var.afm_client,var.client_am).replace(var.afm_secret,var.secret_am)
+
+                                                with open(var.path_afm,'w') as f:
+                                                    f.write(client) 
+                        except:
+                                xbmc.log('%s: afm API Failed!' % var.amgr, xbmc.LOGINFO)
+                                pass
+                                
                 if var.setting('api.service')=='true' and xbmcvfs.exists(var.chk_fen) and xbmcvfs.exists(var.chkset_fen) and str(var.chk_accountmgr_tk) != '':
                         try:
                                 with open(var.path_fen) as f:
@@ -599,6 +616,19 @@ def restore_api():
             except:
                 xbmc.log('%s: Restore API Seren Failed!' % var.amgr, xbmc.LOGINFO)
                 pass
+                
+        if xbmcvfs.exists(var.chk_afm):
+            try:
+                with open(var.path_afm,'r') as f:
+                    data = f.read()
+
+                client = data.replace(var.afm_client,var.client_am).replace(var.afm_secret,var.secret_am)
+
+                with open(var.path_afm,'w') as f:
+                    f.write(client)
+            except:
+                xbmc.log('%s: Restore API afm Failed!' % var.amgr, xbmc.LOGINFO)
+                pass
 
         if xbmcvfs.exists(var.chk_fen):
             try:
@@ -886,12 +916,7 @@ def restore_api():
                 pass
         
        
-var.rm_traktcache()
-
-if str(var.chk_accountmgr_tk) != '':
-        accountmgr.setSetting("api.service", "true")
-else:
-        pass      
+var.rm_traktcache()     
         
 if var.setting('api_restore')=='true': #Check if API restore is enabled
         restore_api() #Restore API Keys
@@ -937,7 +962,7 @@ if var.setting('reset_settings')=='true': #Check if reset settings is enabled
 else:
         pass
 
-if var.setting('api.service')=='true' and (str(var.chk_accountmgr_tk) != ''): #Check if service is enabled and either Trakt of Simkl are authorized
+if var.setting('api.service')=='true' and (str(var.chk_accountmgr_tk) != ''): #Check if service is enabled and Trakt is authorized
         check_api() #Start service
 else:
         quit()

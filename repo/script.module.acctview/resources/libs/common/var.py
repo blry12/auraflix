@@ -126,11 +126,13 @@ backup_youtube = os.path.join(meta_backup,'youtube.json')
 
 #Account Manager Add-on XML's
 seren = xmls + translatePath('plugin.video.seren/settings.xml')
+afm = xmls + translatePath('plugin.video.afm/settings.xml')
 fen = xmls + translatePath('plugin.video.fen/settings.xml')
 ezra = xmls + translatePath('plugin.video.ezra/settings.xml')
 coal = xmls + translatePath('plugin.video.coalition/settings.xml')
 pov = xmls + translatePath('plugin.video.pov/settings.xml')
 umb = xmls + translatePath('plugin.video.umbrella/settings.xml')
+onem = xmls + translatePath('plugin.video.onemoar/settings.xml')
 dradis = xmls + translatePath('plugin.video.dradis/settings.xml')
 taz = xmls + translatePath('plugin.video.taz19/settings.xml')
 shadow = xmls + translatePath('plugin.video.shadow/settings.xml')
@@ -174,6 +176,7 @@ pvr = xmls + translatePath('script.module.pvr.artwork/settings.xml')
 
 #Add-on Paths
 chk_seren = addons + translatePath('plugin.video.seren/')
+chk_afm = addons + translatePath('plugin.video.afm/')
 chk_fen = addons + translatePath('plugin.video.fen/')
 chk_fenlt = addons + translatePath('plugin.video.fenlight/')
 chk_affen = addons + translatePath('plugin.video.affenity/')
@@ -181,6 +184,7 @@ chk_ezra = addons + translatePath('plugin.video.ezra/')
 chk_coal = addons + translatePath('plugin.video.coalition/')
 chk_pov = addons + translatePath('plugin.video.pov/')
 chk_umb = addons + translatePath('plugin.video.umbrella/')
+chk_onem = addons + translatePath('plugin.video.onemoar/')
 chk_dradis = addons + translatePath('plugin.video.dradis/')
 chk_taz = addons + translatePath('plugin.video.taz19/')
 chk_shadow = addons + translatePath('plugin.video.shadow/')
@@ -223,11 +227,13 @@ chk_pvr = addons + translatePath('script.module.pvr.artwork/')
 
 #Add-on Userdata Paths
 seren_ud = addon_data + translatePath('plugin.video.seren/')
+afm_ud = addon_data + translatePath('plugin.video.afm/')
 fen_ud = addon_data + translatePath('plugin.video.fen/')
 ezra_ud = addon_data + translatePath('plugin.video.ezra/')
 coal_ud = addon_data + translatePath('plugin.video.coalition/')
 pov_ud = addon_data + translatePath('plugin.video.pov/')
 umb_ud = addon_data + translatePath('plugin.video.umbrella/')
+onem_ud = addon_data + translatePath('plugin.video.onemoar/')
 dradis_ud = addon_data + translatePath('plugin.video.dradis/')
 taz_ud = addon_data + translatePath('plugin.video.taz19/')
 shadow_ud = addon_data + translatePath('plugin.video.shadow/')
@@ -270,6 +276,7 @@ pvr_ud = addon_data + translatePath('script.module.pvr.artwork/')
 
 #Add-on settings.xml Paths
 chkset_seren = addon_data + translatePath('plugin.video.seren/settings.xml')
+chkset_afm = addon_data + translatePath('plugin.video.afm/settings.xml')
 chkset_fen = addon_data + translatePath('plugin.video.fen/settings.xml')
 chkset_fenlt = addon_data + translatePath('plugin.video.fenlight/databases/settings.db')
 chkset_affen = addon_data + translatePath('plugin.video.affenity/databases/settings.db')
@@ -277,6 +284,7 @@ chkset_ezra = addon_data + translatePath('plugin.video.ezra/settings.xml')
 chkset_coal = addon_data + translatePath('plugin.video.coalition/settings.xml')
 chkset_pov = addon_data + translatePath('plugin.video.pov/settings.xml')
 chkset_umb = addon_data + translatePath('plugin.video.umbrella/settings.xml')
+chkset_onem = addon_data + translatePath('plugin.video.onemoar/settings.xml')
 chkset_dradis = addon_data + translatePath('plugin.video.dradis/settings.xml')
 chkset_taz = addon_data + translatePath('plugin.video.taz19/settings.xml')
 chkset_shadow = addon_data + translatePath('plugin.video.shadow/settings.xml')
@@ -320,6 +328,7 @@ chkset_pvr = addon_data + translatePath('script.module.pvr.artwork/settings.xml'
 
 #Trakt API Key Paths
 path_seren = addons + translatePath('plugin.video.seren/resources/lib/indexers/trakt.py')
+path_afm = addons + translatePath('plugin.video.afm/resources/lib/apis/trakt_api.py')
 path_fen = addons + translatePath('plugin.video.fen/resources/lib/apis/trakt_api.py')
 #path_fenlt = addons + translatePath('plugin.video.fenlight/resources/lib/apis/trakt_api.py')
 path_affen = addons + translatePath('plugin.video.affenity/resources/lib/apis/trakt_api.py')
@@ -348,6 +357,8 @@ path_trakt = addons + translatePath('script.trakt/resources/lib/traktapi.py')
 #Trakt API Keys
 seren_client = '0c9a30819e4af6ffaf3b954cbeae9b54499088513863c03c02911de00ac2de79'
 seren_secret = 'bf02417f27b514cee6a8d135f2ddc261a15eecfb6ed6289c36239826dcdd1842'
+afm_client = '3a69ec1b3b579246dbd6a2d53f49d6b5f227d82d75fe048c1c6ea684a3668ebc'
+afm_secret = 'e98253e2f69c2a72a401af82059c866bfa0853bbc2d27a01869537981295d388'
 fen_client = '645b0f46df29d27e63c4a8d5fff158edd0bef0a6a5d32fc12c1b82388be351af'
 fen_secret = '422a282ef5fe4b5c47bc60425c009ac3047ebd10a7f6af790303875419f18f98'
 fenlt_client = '1038ef327e86e7f6d39d80d2eb5479bff66dd8394e813c5e0e387af0f84d89fb'
@@ -399,6 +410,8 @@ trakt_secret = 'b5fcd7cb5d9bb963784d11bbf8535bc0d25d46225016191eb48e50792d2155c0
 #Metadata API Keys
 ezra_fan = 'fe073550acf157bdb8a4217f215c0882'
 ezra_tmdb = '05a454b451f2f9003fbca293744e4a85'
+afm_fan = 'fa836e1c874ba95ab08a14ee88e05565'
+afm_tmdb = 'b370b60447737762ca38457bd77579b3'
 fen_fan = 'fa836e1c874ba95ab08a14ee88e05565'
 fen_tmdb = 'b370b60447737762ca38457bd77579b3'
 fenlt_tmdb = 'b370b60447737762ca38457bd77579b3'

@@ -13,13 +13,15 @@ from resources.libs.common import logging
 from resources.libs.common import tools
 from resources.libs.common import var
 
-ORDER = ['fen',
+ORDER = ['afm',
+         'fen',
          'fenlt',
          'affen',
          'ezra',
          'coal',
          'pov',
          'umb',
+         'onem',
          'dradis',
          'taz',
          'thecrew',
@@ -28,6 +30,18 @@ ORDER = ['fen',
          'myact']
 
 EASYID = {
+    'afm': {
+        'name'     : 'afm',
+        'plugin'   : 'plugin.video.afm',
+        'saved'    : 'afm',
+        'path'     : os.path.join(CONFIG.ADDONS, 'plugin.video.afm'),
+        'icon'     : os.path.join(CONFIG.ADDONS, 'plugin.video.afm/resources/media/', 'afm_icon.png'),
+        'fanart'   : os.path.join(CONFIG.ADDONS, 'plugin.video.afm/resources/media/', 'afm_fanart.png'),
+        'file'     : os.path.join(CONFIG.EASYFOLD, 'afm_noneasy'),
+        'settings' : os.path.join(CONFIG.ADDON_DATA, 'plugin.video.afm', 'settings.xml'),
+        'default'  : 'easynews_user',
+        'data'     : ['provider.easynews', 'easynews_user', 'easynews_password', 'easynews.use_custom_farm', 'easynews.server_name', 'easynews.title_filter', 'easynews.filter_lang', 'en.priority', 'easynews.lang_filters', 'check.easynews'],
+        'activate' : 'Addon.OpenSettings(plugin.video.afm)'},
     'fen': {
         'name'     : 'Fen',
         'plugin'   : 'plugin.video.fen',
@@ -112,6 +126,18 @@ EASYID = {
         'default'  : 'easynews.user',
         'data'     : ['easynews.enable', 'easynews.user', 'easynews.password', 'easynews.priority'],
         'activate' : 'Addon.OpenSettings(plugin.video.umbrella)'},
+    'onem': {
+        'name'     : 'OneMoar',
+        'plugin'   : 'plugin.video.onemoar',
+        'saved'    : 'onem',
+        'path'     : os.path.join(CONFIG.ADDONS, 'plugin.video.onemoar'),
+        'icon'     : os.path.join(CONFIG.ADDONS, 'plugin.video.onemoar', 'icon.png'),
+        'fanart'   : os.path.join(CONFIG.ADDONS, 'plugin.video.onemoar', 'fanart.jpg'),
+        'file'     : os.path.join(CONFIG.EASYFOLD, 'onem_easy'),
+        'settings' : os.path.join(CONFIG.ADDON_DATA, 'plugin.video.onemoar', 'settings.xml'),
+        'default'  : 'easynews.user',
+        'data'     : ['easynews.enable', 'easynews.user', 'easynews.password', 'easynews.priority'],
+        'activate' : 'Addon.OpenSettings(plugin.video.onemoar)'},
     'dradis': {
         'name'     : 'Dradis',
         'plugin'   : 'plugin.video.dradis',
