@@ -1,9 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
-<addons><addon id="plugin.program.auraflix.nexus" name="[COLOR red]AURAFlix[/COLOR] Wizard - Kodi 20 - Nexus" version="1.2" provider-name="BLRY">
+<addons><addon id="plugin.program.auraflix.nexus" name="[COLOR red]AURAFlix[/COLOR] Wizard - Kodi 20.x - Nexus" version="1.0" provider-name="BLRY">
 	<requires>
 		<import addon="xbmc.python" version="3.0.1" />
-		<import addon="script.module.accountmgr" version="1.0" />
-		<import addon="script.module.acctview" version="1.0" />
 	</requires>
 	<extension point="xbmc.python.pluginsource" library="addon.py">
 		<provides>executable</provides>
@@ -21,8 +19,6 @@
 		<email />
 		<source />
 		<news>
-1.2 - Updated account manager 2.4.6 account view 2.3.1
-1.1 - Updated account manager 2.4.2 account view 2.2.8
 1.0 - Initial Release
 		</news>
 		<assets>
