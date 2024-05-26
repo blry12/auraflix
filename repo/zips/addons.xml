@@ -120,7 +120,7 @@
         </assets>
         <news>INFO: For latest changes see Changelog within Tools of add-on.</news>
     </extension>
-</addon><addon id="repository.auraflix" name="AURAFlix" version="1.3" provider-name="blry">
+</addon><addon id="repository.auraflix" name="[COLOR red]AURAFlix[/COLOR]" version="1.3" provider-name="blry">
     <extension point="xbmc.addon.repository" name="Example Repository">
         <dir>
             <info compressed="false">https://raw.githubusercontent.com/blry12/auraflix/master/repo/zips/addons.xml</info>
