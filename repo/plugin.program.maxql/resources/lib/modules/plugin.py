@@ -21,35 +21,39 @@ def router(paramstring):
         main_menu()
         
     elif mode == 1:
-        from resources.lib.modules import maxql_1080p
-        maxql_1080p.hd.hd_config()
+        from resources.lib.modules import HD
+        HD.hd.hd_config()
 
     elif mode == 2:
-        from resources.lib.modules import maxql_4k
-        maxql_4k.full_hd.fullhd_config()
+        from resources.lib.modules import UHD
+        UHD.full_hd.fullhd_config()
         
     elif mode == 3:
         from resources.lib.modules import enable_dv
         enable_dv.dv.dv_enable()
-        
+
     elif mode == 4:
         from resources.lib.modules import disable_dv
         disable_dv.dv.dv_disable()
-
+        
     elif mode == 5:
+        from resources.lib.modules import disable_at
+        disable_at.at.at_disable()
+
+    elif mode == 6:
         from resources.lib.modules import enable_3d
         enable_3d.three_d.threed_enable()
 
-    elif mode == 6:
+    elif mode == 7:
         from resources.lib.modules import disable_3d
         disable_3d.three_d.threed_disable()
 
-    elif mode == 7:
+    elif mode == 8:
         from resources.lib.modules import autoplay_enable
         autoplay_enable.ap_enable.enable()
 
-    elif mode == 8:
+    elif mode == 9:
         from resources.lib.modules import autoplay_disable
-        autoplay_disable.ap_disable.disable()
+        autoplay_disable.ap_disable.disable()        
 
     xbmcplugin.endOfDirectory(handle)

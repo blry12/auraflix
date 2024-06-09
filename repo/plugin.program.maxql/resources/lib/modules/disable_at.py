@@ -5,8 +5,8 @@ import os
 
 addon_icon = 'special://home/addons/plugin.program.maxql/icon.png'
 
-class dv:
-    def dv_enable():
+class at:
+    def at_disable():
         try:
             addon = xbmcvfs.translatePath('special://home/addons/plugin.video.seren/')
             file = xbmcvfs.translatePath('special://userdata/addon_data/plugin.video.seren/settings.xml')
@@ -15,14 +15,20 @@ class dv:
                 chk_seren_ftr = xbmcaddon.Addon('plugin.video.seren').getSetting("general.filters")
                 addon = xbmcaddon.Addon("plugin.video.seren")
                 setting = addon.getSetting("general.filters")
-                single_ftr = 'DV'
-                additional_ftr = ',DV'
+                single_ftr = 'ATMOS,TRUEHD,DV,DTS-HD MA,DTS-H,8CH,7CH'
                 
-                if str(chk_seren_ftr) != '' and single_ftr not in str(chk_seren_ftr):
-                    addon.setSetting("general.filters", setting + additional_ftr)
+                if str(chk_seren_ftr) == single_ftr:
+                    addon.setSetting("general.filters", "AV1")
                     
-                else:
-                    addon.setSetting("general.filters", single_ftr)        
+                if additional_ftr1 in chk_seren_ftr:
+                    current = str(addon.getSetting("general.filters"))
+                    new = current.replace(",ATMOS", "")
+                    addon.setSetting("general.filters", new)
+                    
+                if additional_ftr2 in chk_seren_ftr:
+                    current = str(addon.getSetting("general.filters"))
+                    new = current.replace("ATMOS,", "")
+                    addon.setSetting("general.filters", new)
         except:
                 pass
             
@@ -32,9 +38,9 @@ class dv:
 
             if xbmcvfs.exists(addon) and xbmcvfs.exists(file):
 
-                ftr = '0'
+                ftr = '1'
                 addon = xbmcaddon.Addon("plugin.video.fen")
-                addon.setSetting("filter_dv", ftr)
+                addon.setSetting("filter_audio", ftr)
         except:
                 pass
                 
@@ -44,21 +50,9 @@ class dv:
 
             if xbmcvfs.exists(addon) and xbmcvfs.exists(file):
 
-                res = 'SD, 720p, 1080p, 4K'
-                uhd = '4K'
-                addon = xbmcaddon.Addon("plugin.video.afm")
-                addon.setSetting("results_quality_movie", res)
-                addon.setSetting("results_quality_episode", res)
-                addon.setSetting("autoplay_quality_movie", res)
-                addon.setSetting("autoplay_quality_episode", res)
-                addon.setSetting("filter_hevc.max_quality", uhd)
-                addon.setSetting("filter_hevc.max_autoplay_quality", uhd)  
-                ftr = ''
+                ftr = 'ATMOS, TRUEHD, DTS-HD MA, DTS-HD, 8CH, 7CH'
                 addon = xbmcaddon.Addon("plugin.video.afm")
                 addon.setSetting("filter_audio", ftr)
-                ftr = '0'
-                addon = xbmcaddon.Addon("plugin.video.afm")
-                addon.setSetting("filter_dv", ftr)
         except:
                 pass                
 
@@ -68,7 +62,7 @@ class dv:
 
             if xbmcvfs.exists(addon) and xbmcvfs.exists(file):
                 from resources.lib.modules import maxql_db
-                maxql_db.enable_fenlt_dv()
+                maxql_db.disable_fenlt_at()
                 xbmc.executebuiltin('PlayMedia(plugin://plugin.video.fenlight/?mode=sync_settings&amp;silent=true)')
                 xbmc.sleep(2000)
         except:
@@ -80,7 +74,7 @@ class dv:
 
             if xbmcvfs.exists(addon) and xbmcvfs.exists(file):
                 from resources.lib.modules import maxql_db
-                maxql_db.enable_affen_dv()
+                maxql_db.disable_affen_at()
                 xbmc.executebuiltin('PlayMedia(plugin://plugin.video.affenity/?mode=sync_settings&amp;silent=true)')
                 xbmc.sleep(2000)
         except:
@@ -92,9 +86,9 @@ class dv:
 
             if xbmcvfs.exists(addon) and xbmcvfs.exists(file):
 
-                ftr = '0'
+                ftr = '1'
                 addon = xbmcaddon.Addon("plugin.video.ezra")
-                addon.setSetting("filter_dv", ftr)
+                addon.setSetting("filter_at", ftr)
         except:
                 pass
 
@@ -104,31 +98,31 @@ class dv:
 
             if xbmcvfs.exists(addon) and xbmcvfs.exists(file):
 
-                ftr = '0'
+                ftr = '1'
                 addon = xbmcaddon.Addon("plugin.video.coalition")
-                addon.setSetting("filter_dv", ftr)
+                addon.setSetting("filter_at", ftr)
         except:
-                pass
-            
+            pass
+        
         try:
             addon = xbmcvfs.translatePath('special://home/addons/plugin.video.pov/')
             file = xbmcvfs.translatePath('special://userdata/addon_data/plugin.video.pov/settings.xml')
 
             if xbmcvfs.exists(addon) and xbmcvfs.exists(file):
 
-                ftr = '0'
+                ftr = '1'
                 addon = xbmcaddon.Addon("plugin.video.pov")
-                addon.setSetting("filter_dv", ftr)
+                addon.setSetting("filter_at", ftr)
         except:
                 pass
-
+            
         try:
             addon = xbmcvfs.translatePath('special://home/addons/plugin.video.umbrella/')
             file = xbmcvfs.translatePath('special://userdata/addon_data/plugin.video.umbrella/settings.xml')
 
             if xbmcvfs.exists(addon) and xbmcvfs.exists(file):
 
-                ftr = 'false'
+                ftr = 'true'
                 addon = xbmcaddon.Addon("plugin.video.umbrella")
                 addon.setSetting("remove.dolby.vision", ftr)
         except:
@@ -140,7 +134,7 @@ class dv:
 
             if xbmcvfs.exists(addon) and xbmcvfs.exists(file):
 
-                ftr = 'false'
+                ftr = 'true'
                 addon = xbmcaddon.Addon("plugin.video.dradis")
                 addon.setSetting("remove.dolby.vision", ftr)
         except:
@@ -152,9 +146,9 @@ class dv:
 
             if xbmcvfs.exists(addon) and xbmcvfs.exists(file):
 
-                ftr = '0'
+                ftr = '1'
                 addon = xbmcaddon.Addon("plugin.video.taz19")
-                addon.setSetting("filter_dv", ftr)
+                addon.setSetting("filter_at", ftr)
         except:
                 pass
             
@@ -164,9 +158,9 @@ class dv:
 
             if xbmcvfs.exists(addon) and xbmcvfs.exists(file):
 
-                ftr = 'false'
+                ftr = 'true'
                 addon = xbmcaddon.Addon("plugin.video.homelander")
-                addon.setSetting("remove.dv", ftr)
+                addon.setSetting("remove.at", ftr)
         except:
                 pass
 
@@ -176,9 +170,9 @@ class dv:
 
             if xbmcvfs.exists(addon) and xbmcvfs.exists(file):
 
-                ftr = 'false'
+                ftr = 'true'
                 addon = xbmcaddon.Addon("plugin.video.thelab")
-                addon.setSetting("remove.dv", ftr)
+                addon.setSetting("remove.at", ftr)
         except:
                 pass
 
@@ -188,21 +182,9 @@ class dv:
 
             if xbmcvfs.exists(addon) and xbmcvfs.exists(file):
 
-                ftr = 'false'
+                ftr = 'true'
                 addon = xbmcaddon.Addon("plugin.video.quicksilver")
-                addon.setSetting("remove.dv", ftr)
-        except:
-                pass
-            
-        try:
-            addon = xbmcvfs.translatePath('special://home/addons/plugin.video.nightwing/')
-            file = xbmcvfs.translatePath('special://userdata/addon_data/plugin.video.nightwing/settings.xml')
-
-            if xbmcvfs.exists(addon) and xbmcvfs.exists(file):
-
-                ftr = 'false'
-                addon = xbmcaddon.Addon("plugin.video.nightwing")
-                addon.setSetting("remove.dv", ftr)
+                addon.setSetting("remove.at", ftr)
         except:
                 pass
 
@@ -212,9 +194,9 @@ class dv:
 
             if xbmcvfs.exists(addon) and xbmcvfs.exists(file):
 
-                ftr = 'false'
+                ftr = 'true'
                 addon = xbmcaddon.Addon("plugin.video.chainsgenocide")
-                addon.setSetting("remove.dv", ftr)
+                addon.setSetting("remove.at", ftr)
         except:
                 pass
 
@@ -224,9 +206,9 @@ class dv:
 
             if xbmcvfs.exists(addon) and xbmcvfs.exists(file):
 
-                ftr = 'false'
+                ftr = 'true'
                 addon = xbmcaddon.Addon("plugin.video.absolution")
-                addon.setSetting("remove.dv", ftr)
+                addon.setSetting("remove.at", ftr)
         except:
                 pass
 
@@ -236,9 +218,21 @@ class dv:
 
             if xbmcvfs.exists(addon) and xbmcvfs.exists(file):
 
-                ftr = 'false'
+                ftr = 'true'
                 addon = xbmcaddon.Addon("plugin.video.shazam")
-                addon.setSetting("remove.dv", ftr)
+                addon.setSetting("remove.at", ftr)
+        except:
+                pass
+            
+        try:
+            addon = xbmcvfs.translatePath('special://home/addons/plugin.video.nightwing/')
+            file = xbmcvfs.translatePath('special://userdata/addon_data/plugin.video.nightwing/settings.xml')
+
+            if xbmcvfs.exists(addon) and xbmcvfs.exists(file):
+
+                ftr = 'true'
+                addon = xbmcaddon.Addon("plugin.video.nightwing")
+                addon.setSetting("remove.at", ftr)
         except:
                 pass
 
@@ -248,7 +242,7 @@ class dv:
 
             if xbmcvfs.exists(addon) and xbmcvfs.exists(file):
 
-                ftr = 'false'
+                ftr = 'true'
                 addon = xbmcaddon.Addon("plugin.video.alvin")
                 addon.setSetting("remove.dv", ftr)
         except:
@@ -260,22 +254,22 @@ class dv:
 
             if xbmcvfs.exists(addon) and xbmcvfs.exists(file):
 
-                ftr = 'false'
+                ftr = 'true'
                 addon = xbmcaddon.Addon("plugin.video.moria")
                 addon.setSetting("remove.dv", ftr)
         except:
                 pass
-
+            
         try:
             addon = xbmcvfs.translatePath('special://home/addons/plugin.video.nine/')
             file = xbmcvfs.translatePath('special://userdata/addon_data/plugin.video.nine/settings.xml')
 
             if xbmcvfs.exists(addon) and xbmcvfs.exists(file):
 
-                ftr = 'false'
+                ftr = 'true'
                 addon = xbmcaddon.Addon("plugin.video.nine")
                 addon.setSetting("remove.dv", ftr)
         except:
                 pass
-            
-        xbmcgui.Dialog().notification('MaxQL', 'Dolby Vision/ATMOS Edition Enabled!', addon_icon, 3000)
+
+        xbmcgui.Dialog().notification('MaxQL', 'Dolby ATMOS Disabled!', addon_icon, 3000)
